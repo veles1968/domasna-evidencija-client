@@ -17,6 +17,7 @@ export default function App() {
   //   const user = await authStorage.getUser();
   //   if (user) setUser(user);
   // };
+  //test
 
   // if (!isReady)
   //   return (
