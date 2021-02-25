@@ -6,8 +6,8 @@ const settings = {
     // apiUrl: "http://192.168.178.29:9000/api", // WLAN
   },
   staging: {
-    // apiUrl: "http://192.168.178.30:9000/api",
-    apiUrl: "http://localhost:9000/api",
+    apiUrl: "http://84.150.218.181:9000/api",
+    // apiUrl: "https://domasna-evidencija-client.herokuapp.com/api",
   },
   prod: {
     apiUrl: "http://192.168.178.30:9000/api",
