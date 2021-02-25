@@ -256,7 +256,7 @@ function ArtikalsScreen({ navigation }) {
             // UPDUSER        = item[8]
             // key={item[0]}
             key={item.artikal_id}
-            title={`${item.ime_artikal} \nID: ${item.artikal_id}`}
+            title={`${item.ime_artikal} \nID-1: ${item.artikal_id}`}
             subTitle={`Cena: ${item.cena}\nVid: ${item.ime_vid}\nID: ${item.vid_id}\nDanok: ${item.steuerrelevant}`}
             onPress={() => navigation.navigate(routes.ARTIKAL_EDIT, item)}
             // onPress={() => navigation.navigate(routes.ARTIKAL_DETAILS, item)}
