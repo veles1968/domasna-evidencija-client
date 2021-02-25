@@ -93,7 +93,7 @@ function ArtikalsScreen({ navigation }) {
     setError(!response.ok);
 
     // console.log("5. artikalData: " + JSON.stringify(response.data));
-    ///
+    /////////
     // console.log("6. response.data: " + JSON.stringify(response.data[0]));
     setArtikalData(response.data);
 
