@@ -226,7 +226,7 @@ function ArtikalsScreen({ navigation }) {
         style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
         onChangeText={handleChange}
         value={imeArtikal}
-        placeholder={"25.02 19:10"}
+        placeholder={"25.02 20:12"}
       />
       {/* End: Search by IME_ARTIKAL */}
 
