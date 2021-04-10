@@ -20,7 +20,7 @@ export default function App() {
     const user = await authStorage.getUser();
 
     console.log("user.email = <" + user.email + ">");
-    console.log("user.password ***** = <" + user.password + ">");
+    console.log("user.password = <" + user.password + ">");
 
     if (user) setUser(user);
   };
@@ -28,7 +28,7 @@ export default function App() {
   if (!isReady)
     return (
       <AppLoading
-        startAsync={restoreUser}
+        // startAsync={restoreUser}
         onFinish={() => setIsReady(true)}
         onError={() => console.log("Greshka vo AppLoading")}
       />
@@ -37,7 +37,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <OfflineNotice />
-      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+      <NavigationContainer theme={navigationTheme}>
         {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>
     </AuthContext.Provider>

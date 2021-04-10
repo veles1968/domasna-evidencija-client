@@ -1,7 +1,7 @@
 import client from "./client";
 
 const endpoint = "/primanjasvalsvrabs";
-const saveendpoint = "/kupuvanjes";
+const saveendpoint = "/primanjas";
 
 const getPrimanjas = () => client.get(endpoint);
 
@@ -27,8 +27,8 @@ export const addPrimanja = (primanja, onUploadProgress) => {
   console.log("data = " + JSON.stringify(data));
 
   console.log("END addPrimanja");
-  // localhost:9000/api/kupuvanjes
-  // return http.post("/kupuvanjes", data);
+  // localhost:9000/api/primanjas
+  // return http.post("/primanjas", data);
 
   return client.post(endpoint, JSON.stringify(data), {
     onUploadProgress: (progress) =>
@@ -55,8 +55,8 @@ export const updatePrimanjas = (primanja, onUploadProgress) => {
   console.log("data = " + JSON.stringify(data));
 
   console.log("END updatePrimanjas");
-  // localhost:9000/api/kupuvanjes
-  // return http.post("/kupuvanjes", data);
+  // localhost:9000/api/primanjas
+  // return http.post("/primanjas", data);
   // client.get(primanjabyime + "?ime_primanja=" + tipNaPrimanje);
 
   return client.put(

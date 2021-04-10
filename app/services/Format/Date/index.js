@@ -31,3 +31,9 @@ export const convertUTCDateToLocalDate = (date) => {
 
   return newDate.toLocaleString();
 };
+
+export const currencyEurFormat = (number) =>
+  new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(number);

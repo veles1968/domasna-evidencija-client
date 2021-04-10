@@ -9,13 +9,16 @@ import {
 import { TextInput } from "react-native";
 import axios from "axios";
 import Moment from "moment";
+import "moment/locale/de";
+import { useIsFocused } from "@react-navigation/native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
 import AppText from "../components/Text";
-import primanjasApi from "../api/primanja";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import colors from "../config/colors";
+import ListItemDeleteAction from "../components/lists/ListItemDeleteAction";
+import primanjasApi from "../api/primanja";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 
@@ -75,16 +78,23 @@ function PrimanjasScreen({ navigation }) {
   const [sortType, setSortType] = useState("datum");
   const [primanjaSorted, setPrimanjaSorted] = useState([]);
   const [isOldestFirst, setIsOldestFirst] = useState(false);
+  const isFocused = useIsFocused();
+
+  Moment.locale("de");
 
   useEffect(() => {
     console.log("1. useEffect");
 
-    gettAllPrimanjas();
+    if (tipPrimanje) {
+      handleChange();
+    } else {
+      gettAllPrimanjas();
+    }
 
     console.log("sortType = " + sortType);
 
     console.log("2. useEffect");
-  }, []);
+  }, [isFocused]);
 
   // const useSort = (someArray, initialSortKey) => {
   //   const [state, setState] = useState({
@@ -195,7 +205,9 @@ function PrimanjasScreen({ navigation }) {
   //   return sortByDate();
   // };
 
-  // Begin: Sort by DATUM, TIP_PRIMANJE, VID
+  {
+    /* Begin: Sort by DATUM, TIP_PRIMANJE, VID */
+  }
   const sortFlatList = (type) => {
     console.log("START sortFlatList, type=" + type);
 
@@ -251,7 +263,9 @@ function PrimanjasScreen({ navigation }) {
 
     console.log("END sortFlatList");
   };
-  // End: Sort by DATUM, TIP_PRIMANJE, VID
+  {
+    /* End: Sort by DATUM, TIP_PRIMANJE, VID */
+  }
 
   function convertUTCDateToLocalDate(date) {
     var newDate = new Date(
@@ -280,6 +294,15 @@ function PrimanjasScreen({ navigation }) {
     ).format("DD.MM.YYYY")}\nVraboten: ${primanja.ime_vraboten}`;
   }
 
+  const handleDelete = (primanja) => {
+    // Delete the message from messagessetPrimanjaData(response.data);
+    console.log("handleDelete");
+
+    setPrimanjaData(
+      primanja.filter((m) => m.primanja_id !== primanja.primanja_id)
+    );
+  };
+
   return (
     <Screen style={styles.screen}>
       {error && (
@@ -288,7 +311,7 @@ function PrimanjasScreen({ navigation }) {
           <Button
             title="Povtori"
             // onPress={getArtikalsApi.request()}
-            onPress={gettAllPrimanjas}
+            onPress={getAllPrimanjas}
           ></Button>
         </>
       )}
@@ -340,7 +363,12 @@ function PrimanjasScreen({ navigation }) {
             // title={`${item.tip_primanje}`}
             title={getTitle(item)}
             subTitle={getSubTitle(item)}
-            onPress={() => navigation.navigate(routes.PRIMANJA_EDIT, item)}
+            onPress={() => {
+              navigation.navigate(routes.PRIMANJA_EDIT, item);
+            }}
+            renderRightActions={() => (
+              <ListItemDeleteAction onPress={() => handleDelete(item)} />
+            )}
             // onPress={() => navigation.navigate(routes.ARTIKAL_DETAILS, item)}
             // onPress={() =>
             //   console.log(

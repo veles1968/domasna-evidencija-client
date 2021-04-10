@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { TextInput } from "react-native";
 import Moment from "moment";
+import { useNavigation } from "@react-navigation/native";
 import * as Yup from "yup";
 
 import {
@@ -58,6 +59,7 @@ function PrimanjaEditScreen({ route }) {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigation = useNavigation();
 
   Moment.locale("de");
 
@@ -225,8 +227,50 @@ function PrimanjaEditScreen({ route }) {
     }
   };
 
+  const deleteExecution = async () => {
+    setProgress(0);
+    setUploadVisible(true);
+
+    result = await primanjasApi.deletePrimanja(
+      primanja.primanja_id,
+      (progress) => setProgress(progress)
+    );
+
+    if (!result.ok) {
+      setUploadVisible(false);
+      return alert("Could not delete the primanja");
+    }
+
+    // setUploadVisible(false);
+
+    navigation.goBack(null);
+    console.log("END handleDelete");
+    // navigation.navigate(routes.PRIMANJA_LIST);
+    // resetForm();
+  };
+
   const handleDelete = () => {
-    console.log("handleDelete");
+    console.log("START handleDelete");
+
+    // console.log("1. primanja2 = " + JSON.stringify(primanja2, null, 2));
+    // console.log("primanja2.primanja_id = " + primanja2.primanja_id);
+    console.log("primanja.primanja_id = " + primanja.primanja_id);
+
+    Alert.alert(
+      "Brishenje",
+      `Dali sakate da go izbrishete primanjeto ${primanja.tip_primanje}?`,
+      [
+        {
+          text: "Ne",
+          onPress: () => {
+            return;
+          },
+          style: "cancel",
+        },
+        { text: "Da", onPress: () => deleteExecution() },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handleSubmit = async (primanja2, { resetForm }) => {

@@ -18,6 +18,9 @@ import colors from "../config/colors";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 
+// 08.04.2021
+// import { ScreenContext } from "../auth/context";
+
 // Begin: Fields for sorting-buttons
 const fieldNames = [
   {
@@ -51,9 +54,12 @@ function ArtikalsScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [sortType, setSortType] = useState("ime_artikal");
+  // const { screen, setScreen } = useContext(ScreenContext);
 
   useEffect(() => {
     console.log("1. useEffect");
+
+    // setScreen("Artikals");
 
     getAllArtikals();
 
@@ -226,7 +232,7 @@ function ArtikalsScreen({ navigation }) {
         style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
         onChangeText={handleChange}
         value={imeArtikal}
-        placeholder={"25.02 20:12"}
+        placeholder={"27.02 001"}
       />
       {/* End: Search by IME_ARTIKAL */}
 

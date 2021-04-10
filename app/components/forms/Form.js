@@ -14,6 +14,7 @@ function AppForm({
       initialValues={initialValues}
       // onChange={onChange} //-DT-20210203
       onSubmit={onSubmit}
+      onDelete={onDelete}
       validationSchema={validationSchema}
     >
       {() => <>{children}</>}
