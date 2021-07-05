@@ -313,7 +313,7 @@ function PrimanjaEditScreen({ route }) {
   };
 
   return (
-    <Screen style={styles.screen}>
+    <Screen style={styles.screen} editScreen>
       <UploadScreen
         onDone={() => setUploadVisible(false)}
         progress={progress}

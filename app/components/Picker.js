@@ -16,7 +16,7 @@ import Screen from "./Screen";
 
 function AppPicker({
   defaultValue, //+DT-20210202
-  icon,
+  // icon, //-DT-20210506
   items,
   numberOfColumns = 1,
   onSelectItem,
@@ -31,20 +31,18 @@ function AppPicker({
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
         <View style={[styles.container, { width }]}>
-          {icon && (
+          {/* {icon && ( //-DT-20210506
             <MaterialCommunityIcons
               name={icon}
               size={20}
               color={defaultStyles.colors.medium}
               style={styles.icon}
             />
-          )}
+          )} */}
           {selectedItem ? (
             <Text style={styles.text}>{selectedItem.label}</Text>
           ) : (
             <Text style={styles.placeholder}>{placeholder}</Text>
-            // <Text style={styles.placeholder}>{defaultValue}</Text> //+DT-20210202
-            // <Text style={styles.placeholder} defaultValue={defaultValue}></Text> //+DT-20210202
           )}
 
           <MaterialCommunityIcons
@@ -86,9 +84,9 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 10,
   },
-  icon: {
-    marginRight: 10,
-  },
+  // icon: {              //-DT-20210506
+  //   marginRight: 10,
+  // },
   placeholder: {
     color: defaultStyles.colors.medium,
     flex: 1,

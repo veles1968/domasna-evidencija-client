@@ -15,7 +15,6 @@ import Screen from "../components/Screen";
 import FormImagePicker from "../components/forms/FormImagePicker";
 import artikalsApi from "../api/artikals";
 import vidsApi from "../api/vids";
-// import useLocation from "../hooks/useLocation";
 import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
@@ -96,7 +95,6 @@ function ArtikalEditScreen({ route }) {
 
     setError(!response.ok);
 
-    // console.log("5. vidData: " + JSON.stringify(response.data));
     setVidData(response.data);
     // console.log("6. response.data: " + JSON.stringify(response.data[0]));
     // console.log("7. response.data: " + JSON.stringify(response.data, null, 2));
@@ -107,7 +105,7 @@ function ArtikalEditScreen({ route }) {
   };
 
   const handleSubmit = async (artikal2, { resetForm }) => {
-    console.log("START handleSubmit");
+    // console.log("START handleSubmit");
 
     console.log("1. artikal2 = " + JSON.stringify(artikal2, null, 2));
     // artikal2.artikal_id = artikal.artikal_id;
@@ -122,7 +120,6 @@ function ArtikalEditScreen({ route }) {
 
     setProgress(0);
     setUploadVisible(true);
-    console.log("");
 
     var result;
 
@@ -146,7 +143,7 @@ function ArtikalEditScreen({ route }) {
       setIsEnabled(false);
     } //-DT-20210203: Causes the changed field name to get the old value again
 
-    console.log("END handleSubmit");
+    // console.log("END handleSubmit");
   };
 
   const getImeArtikal = () => {
@@ -183,7 +180,7 @@ function ArtikalEditScreen({ route }) {
   };
 
   return (
-    <Screen style={styles.container}>
+    <Screen style={styles.container} editScreen>
       <UploadScreen
         onDone={() => setUploadVisible(false)}
         progress={progress}
@@ -193,23 +190,13 @@ function ArtikalEditScreen({ route }) {
         initialValues={{
           artikal_id: isAddMode ? "" : artikal.artikal_id.toString(),
           ime_artikal: isAddMode ? "" : getImeArtikal(),
-          // ime_artikal: isAddMode ? "" : "abc123",
           cena: isAddMode ? "" : artikal.cena.toString(),
           steuerrelevant: isAddMode ? "0" : artikal.steuerrelevant.toString(),
-          // vid_id: null,
-          // vid: isAddMode ? "" : artikal.ime_vid},
-          // vid: "Alkohol",
-          // vid: selectedItem.label,
-          // vid: vidData.label,
-          // vid: artikal.ime_vid,
           vid: {
             label: isAddMode ? "Vnesi Vid" : artikal.ime_vid.toString(),
-            // value: isAddMode ? "" : artikal.vid_id.toString(),
             value: isAddMode ? "" : artikal.vid_id.toString(),
           },
-          vid2: isAddMode ? "" : artikal.ime_vid,
           insdate: isAddMode ? "" : getInsDate(),
-          // images: [],
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
@@ -230,13 +217,6 @@ function ArtikalEditScreen({ route }) {
           // value={defaultValue}
         />
         <FormField
-          maxLength={255}
-          name="vid2"
-          placeholder="Vid2"
-          width="100%"
-          // defaultValue={isAddMode ? "" : artikal.cena.toString()}
-        />
-        <FormField
           keyboardType="numeric"
           maxLength={8}
           name="cena"
@@ -245,16 +225,12 @@ function ArtikalEditScreen({ route }) {
           // defaultValue={isAddMode ? "" : artikal.cena.toString()}
         />
         <Picker
-          // items={vids}
           items={vidData}
           name="vid"
           numberOfColumns={3}
           PickerItemComponent={CategoryPickerItem}
           placeholder="Vid"
-          // placeholder={artikal.ime_vid} //+DT-20210202
           width="100%"
-          // defaultValue={isAddMode ? "" : artikal.ime_vid} //+DT-20210202
-          // value={artikal.ime_vid} //+DT-20210202
         />
         <Text style={styles.switch}>
           <Switch
@@ -267,7 +243,6 @@ function ArtikalEditScreen({ route }) {
           />
           Danok
         </Text>
-        {/* <Text>aaa</Text> */}
 
         <FormField
           keyboardType="numeric"
@@ -284,6 +259,7 @@ function ArtikalEditScreen({ route }) {
           placeholder="Datum na vnes"
           width="100%"
         />
+
         <SubmitButton title="Save" />
       </Form>
     </Screen>

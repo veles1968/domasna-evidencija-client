@@ -59,6 +59,7 @@ function LoginScreen(props) {
           secureTextEntry
           textContentType="password"
         />
+
         <SubmitButton title="Login" />
       </Form>
     </Screen>

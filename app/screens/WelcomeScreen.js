@@ -13,7 +13,7 @@ function WelcomeScreen({ navigation }) {
     >
       <View style={styles.logoContainer}>
         <Image style={styles.logo} source={require("../assets/logo-red.png")} />
-        <Text style={styles.tagline}>Domashna Evidencija@App 0.16</Text>
+        <Text style={styles.tagline}>Domashna Evidencija@App 0.17 Dev</Text>
         <Text style={styles.tagline}>10.04.2021</Text>
       </View>
       <View style={styles.buttonsContainer}>

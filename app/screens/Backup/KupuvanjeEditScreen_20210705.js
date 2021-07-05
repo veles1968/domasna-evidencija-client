@@ -408,9 +408,134 @@ function KupuvanjeEditScreen({ route }) {
               round
               value={imeArtikal}
             />
+
+            {displayForm && (
+              <Form
+                initialValues={{
+                  kupdatum_id: isAddMode
+                    ? ""
+                    : kupuvanje.kupdatum_id.toString(),
+                  datum: getDatum(),
+                  ime_artikal: isAddMode
+                    ? ""
+                    : kupuvanje.ime_artikal.toString(),
+                  kolicina: isAddMode ? "" : kupuvanje.kolicina.toString(),
+                  artikal_id: isAddMode ? "" : kupuvanje.artikal_id.toString(),
+
+                  valuta: {
+                    label: isAddMode ? "EUR" : kupuvanje.ime_valuta.toString(),
+                    value: isAddMode ? "9" : kupuvanje.valuta_id,
+                  },
+                  valuta_id: isAddMode ? "9" : kupuvanje.valuta_id.toString(),
+
+                  vraboten_id: isAddMode
+                    ? "1"
+                    : kupuvanje.vraboten_id.toString(),
+
+                  opis: isAddMode ? "" : kupuvanje.opis.toString(),
+
+                  steuerrelevant: isAddMode
+                    ? "0"
+                    : kupuvanje.steuerrelevant.toString(),
+
+                  trans_id: isAddMode ? "" : getTransId(),
+                  insdate: isAddMode ? "" : getInsDate(),
+                  insuser: isAddMode ? "" : kupuvanje.insuser,
+                  kupovnaCena: isAddMode ? "" : kupuvanje.kupovnaCena,
+                }}
+                onSubmit={handleSubmit}
+                onDelete={handleDelete}
+                validationSchema={validationSchema}
+              >
+                {
+                  <FormField
+                    editable={false}
+                    maxLength={50}
+                    name="ime_artikal"
+                    placeholder="Artikal"
+                    value={selectedArtikal}
+                    width="100%"
+                  />
+                }
+                <Button onPress={showDatepicker} title="Odberi Datum" />
+                {show && (
+                  <DateTimePicker
+                    dateFormat="dayofweek day month"
+                    display="default"
+                    is24Hour={true}
+                    locale="de-DE"
+                    minimumDate={new Date(1990, 0, 1)}
+                    mode={mode}
+                    onChange={onChangeDatePicker}
+                    testID="dateTimePicker"
+                    value={date}
+                  />
+                )}
+                <FormField
+                  maxLength={255}
+                  name="datum"
+                  keyboardType="numeric"
+                  placeholder="Datum"
+                  value={getDatum()}
+                />
+
+                <FormField
+                  keyboardType="numeric"
+                  maxLength={10}
+                  name="kolicina"
+                  placeholder="Kolicina"
+                  width="100%"
+                />
+                <FormField
+                  maxLength={200}
+                  multiline={true}
+                  name="opis"
+                  placeholder="Opis"
+                  editable={true}
+                />
+                <Picker
+                  items={valutaData}
+                  name="valuta"
+                  numberOfColumns={3}
+                  PickerItemComponent={CategoryPickerItem}
+                  placeholder="Valuta"
+                  width="100%"
+                />
+                {!isAddMode && (
+                  <FormField
+                    keyboardType="numeric"
+                    maxLength={10}
+                    name="insdate"
+                    placeholder="Datum na vnes"
+                    width="100%"
+                    editable={false}
+                  />
+                )}
+                {!isAddMode && (
+                  <FormField
+                    maxLength={50}
+                    name="insuser"
+                    placeholder="Od"
+                    width="100%"
+                    editable={false}
+                  />
+                )}
+                <SubmitButton title="Save" />
+                {isAddMode ? (
+                  false
+                ) : (
+                  <DeleteButton title="Delete" onPress={handleDelete} />
+                )}
+              </Form>
+            )}
           </>
         }
         renderItem={({ item }) => (
+          // <View style={styles.listItem}>
+          //   <View style={styles.metaInfo}>
+          //     <Text>{`${item.ime_artikal} 000`}</Text>
+          //   </View>
+          // </View>
           <Card
             key={item.artikal_id}
             title={item.ime_artikal}
@@ -434,95 +559,84 @@ function KupuvanjeEditScreen({ route }) {
         value={imeArtikal}
       />
 
-      {displayForm && (
-        <Form
-          initialValues={{
-            kupdatum_id: isAddMode ? "" : kupuvanje.kupdatum_id.toString(),
-            datum: getDatum(),
-            ime_artikal: isAddMode ? "" : kupuvanje.ime_artikal.toString(),
-            kolicina: isAddMode ? "" : kupuvanje.kolicina.toString(),
-            artikal_id: isAddMode ? "" : kupuvanje.artikal_id.toString(),
+      {
+        <FormField
+          editable={false}
+          maxLength={50}
+          name="ime_artikal"
+          placeholder="Artikal"
+          value={selectedArtikal}
+          width="100%"
+        />
+      }
+      <Button onPress={showDatepicker} title="Odberi Datum" />
+      {show && (
+        <DateTimePicker
+          dateFormat="dayofweek day month"
+          display="default"
+          is24Hour={true}
+          locale="de-DE"
+          minimumDate={new Date(1990, 0, 1)}
+          mode={mode}
+          onChange={onChangeDatePicker}
+          testID="dateTimePicker"
+          value={date}
+        />
+      )}
+      <FormField
+        maxLength={255}
+        name="datum"
+        keyboardType="numeric"
+        placeholder="Datum"
+        value={getDatum()}
+      />
 
-            valuta: {
-              label: isAddMode ? "EUR" : kupuvanje.ime_valuta.toString(),
-              value: isAddMode ? "9" : kupuvanje.valuta_id,
-            },
-            valuta_id: isAddMode ? "9" : kupuvanje.valuta_id.toString(),
-
-            vraboten_id: isAddMode ? "1" : kupuvanje.vraboten_id.toString(),
-
-            opis: isAddMode ? "" : kupuvanje.opis.toString(),
-
-            steuerrelevant: isAddMode
-              ? "0"
-              : kupuvanje.steuerrelevant.toString(),
-
-            trans_id: isAddMode ? "" : getTransId(),
-            insdate: isAddMode ? "" : getInsDate(),
-            insuser: isAddMode ? "" : kupuvanje.insuser,
-            kupovnaCena: isAddMode ? "" : kupuvanje.kupovnaCena,
-          }}
-          onSubmit={handleSubmit}
-          onDelete={handleDelete}
-          validationSchema={validationSchema}
-        >
-          <FormField
-            editable={false}
-            maxLength={50}
-            name="ime_artikal"
-            placeholder="Artikal"
-            value={selectedArtikal}
-            width="100%"
-          />
-          <Button onPress={showDatepicker} title="Odberi Datum" />
-
-          {show && (
-            <DateTimePicker
-              dateFormat="dayofweek day month"
-              display="default"
-              is24Hour={true}
-              locale="de-DE"
-              minimumDate={new Date(1990, 0, 1)}
-              mode={mode}
-              onChange={onChangeDatePicker}
-              testID="dateTimePicker"
-              value={date}
-            />
-          )}
-
-          <FormField
-            maxLength={255}
-            name="datum"
-            keyboardType="numeric"
-            placeholder="Datum"
-            value={getDatum()}
-          />
-
-          <FormField
-            keyboardType="numeric"
-            maxLength={10}
-            name="kolicina"
-            placeholder="Kolicina"
-            width="100%"
-          />
-          <FormField
-            maxLength={200}
-            multiline={true}
-            name="opis"
-            placeholder="Opis"
-            editable={true}
-          />
-          <Picker
-            items={valutaData}
-            name="valuta"
-            numberOfColumns={3}
-            PickerItemComponent={CategoryPickerItem}
-            placeholder="Valuta"
-            width="100%"
-          />
-
-          <SubmitButton title="Save" />
-        </Form>
+      <FormField
+        keyboardType="numeric"
+        maxLength={10}
+        name="kolicina"
+        placeholder="Kolicina"
+        width="100%"
+      />
+      <FormField
+        maxLength={200}
+        multiline={true}
+        name="opis"
+        placeholder="Opis"
+        editable={true}
+      />
+      <Picker
+        items={valutaData}
+        name="valuta"
+        numberOfColumns={3}
+        PickerItemComponent={CategoryPickerItem}
+        placeholder="Valuta"
+        width="100%"
+      />
+      {!isAddMode && (
+        <FormField
+          keyboardType="numeric"
+          maxLength={10}
+          name="insdate"
+          placeholder="Datum na vnes"
+          width="100%"
+          editable={false}
+        />
+      )}
+      {!isAddMode && (
+        <FormField
+          maxLength={50}
+          name="insuser"
+          placeholder="Od"
+          width="100%"
+          editable={false}
+        />
+      )}
+      <SubmitButton title="Save" />
+      {isAddMode ? (
+        false
+      ) : (
+        <DeleteButton title="Delete" onPress={handleDelete} />
       )}
     </Screen>
   );

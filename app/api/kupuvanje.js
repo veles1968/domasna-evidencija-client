@@ -1,32 +1,38 @@
 import client from "./client";
 
-const endpoint = "/primanjasvalsvrabs";
-const saveendpoint = "/primanjas";
+const endpoint = "/kupuvanjesartsvids";
 
-const getPrimanjas = () => client.get(endpoint);
+const getKupuvanjes = () => client.get(endpoint);
 
-const getPrimanjasByTip = (tipNaPrimanje) =>
-  client.get(endpoint + "?tip_primanje=" + tipNaPrimanje);
+const getKupuvanjesByImeArtikal = (imeArtikal) =>
+  client.get(endpoint + "?ime_artikal=" + imeArtikal);
 
-export const addPrimanja = (primanja, onUploadProgress) => {
-  console.log("START addPrimanja");
+export const addKupuvanje = (kupuvanje, onUploadProgress) => {
+  console.log("START addKupuvanje");
 
   var data = {
-    // primanja_id: primanja.primanja_id,
-    valuta_id: primanja.valuta.value,
-    vraboten_id: primanja.vraboten.value,
-    iznos: primanja.iznos,
-    mesec: primanja.mesec,
-    tip_primanje: primanja.tip_primanje,
-    datum: primanja.datum,
-    odnossodem: primanja.odnossodem,
-    vobanka: primanja.vobanka,
-    trans_id: primanja.trans_id,
+    // kupdatum_id: kupuvanje.kupdatum_id,
+    datum: kupuvanje.datum,
+    ime_artikal: kupuvanje.ime_artikal,
+    ime_vid: kupuvanje.ime_vid,
+    total_amount: kupuvanje.total_amount,
+    artikal_id: kupuvanje.artikal_id,
+    valuta_id: kupuvanje.valuta.value,
+    kolicina: kupuvanje.kolicina,
+    kupovnacena: kupuvanje.kupovnacena,
+    opis: kupuvanje.opis,
+    cek: kupuvanje.cek,
+    cek_id: kupuvanje.cek_id,
+    vraboten_id: kupuvanje.vraboten_id,
+    mesec_struja: kupuvanje.mesec_struja,
+    rati_id: kupuvanje.rati_id,
+    trans_id: kupuvanje.trans_id,
+    steuerrelevant: kupuvanje.steuerrelevant,
   };
 
   console.log("data = " + JSON.stringify(data));
 
-  console.log("END addPrimanja");
+  console.log("END addKupuvanje");
   // localhost:9000/api/primanjas
   // return http.post("/primanjas", data);
 
@@ -36,31 +42,39 @@ export const addPrimanja = (primanja, onUploadProgress) => {
   });
 };
 
-export const updatePrimanjas = (primanja, onUploadProgress) => {
-  console.log("START updatePrimanjas");
+export const updateKupuvanjes = (kupuvanje, onUploadProgress) => {
+  console.log("START updateKupuvanjes");
 
   var data = {
-    primanja_id: primanja.primanja_id,
-    valuta_id: primanja.valuta.value,
-    vraboten_id: primanja.vraboten.value,
-    iznos: primanja.iznos,
-    mesec: primanja.mesec,
-    tip_primanje: primanja.tip_primanje,
-    datum: primanja.datum,
-    odnossodem: primanja.odnossodem,
-    vobanka: primanja.vobanka,
-    trans_id: primanja.trans_id,
+    kupdatum_id: kupuvanje.kupdatum_id,
+    datum: kupuvanje.datum,
+    ime_artikal: kupuvanje.ime_artikal,
+    ime_vid: kupuvanje.ime_vid,
+    vid_id: vid.vid_id,
+    total_amount: kupuvanje.total_amount,
+    artikal_id: kupuvanje.artikal_id,
+    valuta_id: kupuvanje.valuta.value,
+    kolicina: kupuvanje.kolicina,
+    kupovnacena: kupuvanje.kupovnacena,
+    opis: kupuvanje.opis,
+    cek: kupuvanje.cek,
+    cek_id: kupuvanje.cek_id,
+    vraboten_id: kupuvanje.vraboten.value,
+    mesec_struja: kupuvanje.mesec_struja,
+    rati_id: kupuvanje.rati_id,
+    trans_id: kupuvanje.trans_id,
+    steuerrelevant: kupuvanje.steuerrelevant,
   };
 
   console.log("data = " + JSON.stringify(data));
 
-  console.log("END updatePrimanjas");
+  console.log("END updateKupuvanjes");
   // localhost:9000/api/primanjas
   // return http.post("/primanjas", data);
-  // client.get(primanjabyime + "?ime_primanja=" + tipNaPrimanje);
+  // client.get(primanjabyime + "?ime_primanja=" + imeArtikal);
 
   return client.put(
-    endpoint + "/" + primanja.primanja_id,
+    endpoint + "/" + kupuvanje.kupdatum_id,
     JSON.stringify(data),
     {
       onUploadProgress: (progress) =>
@@ -69,29 +83,29 @@ export const updatePrimanjas = (primanja, onUploadProgress) => {
   );
 };
 
-export const deletePrimanja = (primanja_id, onUploadProgress) => {
-  console.log("START deletePrimanja");
-  // console.log("primanja.primanja_id = <" + primanja.primanja_id + ">");
-  console.log("primanja_id = <" + primanja_id + ">");
+export const deleteKupuvanje = (kupdatum_id, onUploadProgress) => {
+  console.log("START deleteKupuvanje");
+  // console.log("kupuvanje.kupdatum_id = <" + kupuvanje.kupdatum_id + ">");
+  console.log("kupdatum_id = <" + kupdatum_id + ">");
 
   var data = {
-    primanja_id: primanja_id,
+    kupdatum_id: kupdatum_id,
   };
 
-  console.log("END  deletePrimanja");
+  console.log("END  deleteKupuvanje");
 
-  // if (primanja.primanja_id === undefined) return;
+  // if (kupuvanje.kupdatum_id === undefined) return;
 
-  return client.delete(endpoint + "/" + primanja_id, {
+  return client.delete(endpoint + "/" + kupdatum_id, {
     onUploadProgress: (progress) =>
       onUploadProgress(progress.loaded / progress.total),
   });
 };
 
 export default {
-  addPrimanja,
-  deletePrimanja,
-  getPrimanjas,
-  getPrimanjasByTip,
-  updatePrimanjas,
+  addKupuvanje,
+  deleteKupuvanje,
+  getKupuvanjes,
+  getKupuvanjesByImeArtikal,
+  updateKupuvanjes,
 };

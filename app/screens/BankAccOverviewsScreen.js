@@ -13,7 +13,7 @@ import axios from "axios";
 import Moment from "moment";
 import "moment/locale/de";
 import NumberFormat from "react-number-format";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
 import AppText from "../components/Text";
@@ -63,7 +63,7 @@ const initialBankAccOverview = [
   },
 ];
 
-function BankAccOverviewsScreen({ navigation }) {
+function BankAccOverviewsScreen({ route }) {
   const [bankAccOverviewData, setBankAccOverviewData] = useState(
     initialBankAccOverview
   );
@@ -83,6 +83,8 @@ function BankAccOverviewsScreen({ navigation }) {
       return !previousState;
     }, getAllBankAccOverviewsByBankCalc());
 
+  const navigation = useNavigation();
+
   // var NumberFormat = require("react-number-format");
 
   // const toggleSwitch = () =>
@@ -100,18 +102,26 @@ function BankAccOverviewsScreen({ navigation }) {
   useEffect(() => {
     console.log("1. useEffect");
 
-    if (imeBanka) {
-      handleChange();
-    } else {
-      getAllBankAccOverviews();
+    let mounted = true;
+    getAllBankAccOverviews(mounted);
+
+    if (route.params) {
     }
+
+    // if (imeBanka) {
+    //   handleChange();
+    // } else {
+    //   getAllBankAccOverviews();
+    // }
 
     console.log("sortType = " + sortType);
 
     console.log("2. useEffect");
+
+    return () => (mounted = false);
   }, [isFocused]);
 
-  const getAllBankAccOverviews = async () => {
+  const getAllBankAccOverviews = async (mounted) => {
     console.log("START getAllBankAccOverviews-1");
 
     setLoading(true);
@@ -120,7 +130,9 @@ function BankAccOverviewsScreen({ navigation }) {
 
     setError(!response.ok);
 
-    setBankAccOverviewData(response.data);
+    if (mounted) {
+      setBankAccOverviewData(response.data);
+    }
 
     console.log("END getAllBankAccOverviews-1");
     return response;

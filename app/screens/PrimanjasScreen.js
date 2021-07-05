@@ -10,6 +10,7 @@ import { TextInput } from "react-native";
 import axios from "axios";
 import Moment from "moment";
 import "moment/locale/de";
+import { SearchBar } from "react-native-elements";
 import { useIsFocused } from "@react-navigation/native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
@@ -88,7 +89,7 @@ function PrimanjasScreen({ navigation }) {
     if (tipPrimanje) {
       handleChange();
     } else {
-      gettAllPrimanjas();
+      getAllPrimanjas();
     }
 
     console.log("sortType = " + sortType);
@@ -117,8 +118,8 @@ function PrimanjasScreen({ navigation }) {
   //   };
   // };
 
-  const gettAllPrimanjas = async () => {
-    console.log("START gettAllPrimanjas-1");
+  const getAllPrimanjas = async () => {
+    console.log("START getAllPrimanjas-1");
 
     setLoading(true);
     const response = await primanjasApi.getPrimanjas();
@@ -128,7 +129,7 @@ function PrimanjasScreen({ navigation }) {
 
     setPrimanjaData(response.data);
 
-    console.log("END gettAllPrimanjas-1");
+    console.log("END getAllPrimanjas-1");
     return response;
   };
 
@@ -308,19 +309,15 @@ function PrimanjasScreen({ navigation }) {
       {error && (
         <>
           <AppText>Greshka!</AppText>
-          <Button
-            title="Povtori"
-            // onPress={getArtikalsApi.request()}
-            onPress={getAllPrimanjas}
-          ></Button>
+          <Button title="Povtori" onPress={getAllPrimanjas}></Button>
         </>
       )}
       {/* Begin: Search by TIP_PRIMANJE */}
-      <TextInput
-        style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+      <SearchBar
+        style={{ height: 40, borderColor: "white", borderWidth: 1 }}
+        placeholder={"Tip na Primanje"}
         onChangeText={handleChange}
         value={tipPrimanje}
-        placeholder={"Tip na Primanje"}
       />
       {/* End: Search by TIP_PRIMANJE */}
 

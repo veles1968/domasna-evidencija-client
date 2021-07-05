@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   detailsContainer: {
-    padding: 20,
+    padding: 1, //+-DT:20210516: Changed from 20 to 1
   },
   image: {
     width: "100%",

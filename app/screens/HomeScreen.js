@@ -26,6 +26,14 @@ const menuItems = [
     targetScreen: routes.KUPUVANJE_LIST,
   },
   {
+    title: "Kupuvanje Vnes",
+    icon: {
+      name: "format-list-bulleted",
+      backgroundColor: colors.secondary,
+    },
+    targetScreen: routes.KUPUVANJE_EDIT,
+  },
+  {
     title: "Messages",
     icon: {
       name: "format-list-bulleted",

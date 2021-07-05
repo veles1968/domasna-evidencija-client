@@ -11,13 +11,48 @@ import {
 const initialMessages = [
   {
     id: 1,
-    title: "Mosh Hamedani",
+    title: "Prvo Ime",
     description: "Hey! Is this item still available?",
     image: require("../assets/dime.jpg"),
   },
   {
     id: 2,
     title: "Mosh Hamedani",
+    description:
+      "I'm interested in this item. When will you be able to post it?",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 3,
+    title: "Mosh Hamedani",
+    description:
+      "I'm interested in this item. When will you be able to post it?",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 4,
+    title: "Mosh Hamedani",
+    description:
+      "I'm interested in this item. When will you be able to post it?",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 5,
+    title: "Mosh Hamedani",
+    description:
+      "I'm interested in this item. When will you be able to post it?",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 6,
+    title: "Shesto Ime",
+    description:
+      "I'm interested in this item. When will you be able to post it?",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 7,
+    title: "Posleden",
     description:
       "I'm interested in this item. When will you be able to post it?",
     image: require("../assets/dime.jpg"),
