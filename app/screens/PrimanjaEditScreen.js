@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import axios from "axios";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput } from "react-native";
 import Moment from "moment";
 import { useNavigation } from "@react-navigation/native";
@@ -27,6 +28,7 @@ import {
 } from "../services/Format/Date";
 import ActivityIndicator from "../components/ActivityIndicator";
 import AppText from "../components/Text";
+import Button from "../components/Button";
 import Card from "../components/Card";
 import CategoryPickerItem from "../components/CategoryPickerItem";
 import colors from "../config/colors";
@@ -52,14 +54,17 @@ const validationSchema = Yup.object().shape({
 });
 
 function PrimanjaEditScreen({ route }) {
-  const [vrabotenData, setVrabotenData] = useState([]);
-  const [valutaData, setValutaData] = useState([]);
+  const [date, setDate] = useState(new Date());
   const [defaultCurrency, setDefaultCurrency] = useState(0);
-  const [uploadVisible, setUploadVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState("date");
   const navigation = useNavigation();
+  const [progress, setProgress] = useState(0);
+  const [show, setShow] = useState(false);
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [valutaData, setValutaData] = useState([]);
+  const [vrabotenData, setVrabotenData] = useState([]);
 
   Moment.locale("de");
 
@@ -176,12 +181,16 @@ function PrimanjaEditScreen({ route }) {
   const getDatum = () => {
     console.log("START getDatum");
 
-    if (isAddMode) {
-      // console.log("IME_ARTIKAL = <>");
+    console.log("isAddMode = <" + isAddMode + ">");
 
-      return "";
+    if (isAddMode) {
+      // console.log("date = <" + date + ">");
+      // console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
+
+      // console.log("END getDatum");
+      return Moment(date).format("DD.MM.YYYY");
     } else {
-      console.log("END getDatum");
+      // console.log("END getDatum");
       // return(<View> {Moment(dt).format('d MMM YYYY')} </View>) //basically you can do all sorts of the formatting and others
       return Moment(primanja.datum).format("DD.MM.YYYY");
     }
@@ -231,7 +240,7 @@ function PrimanjaEditScreen({ route }) {
     setProgress(0);
     setUploadVisible(true);
 
-    result = await primanjasApi.deletePrimanja(
+    const result = await primanjasApi.deletePrimanja(
       primanja.primanja_id,
       (progress) => setProgress(progress)
     );
@@ -312,6 +321,33 @@ function PrimanjaEditScreen({ route }) {
     console.log("END handleSubmit");
   };
 
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+  };
+
+  const onChangeDatePicker = (event, selectedDate) => {
+    console.log("START onChangeDatePicker");
+
+    console.log("selectedDate = " + selectedDate);
+
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+
+    console.log("date = " + date);
+
+    console.log("END onChangeDatePicker");
+  };
+
   return (
     <Screen style={styles.screen} editScreen>
       <UploadScreen
@@ -339,7 +375,8 @@ function PrimanjaEditScreen({ route }) {
           },
           mesec: isAddMode ? "" : getMesec(),
           valuta_id: isAddMode ? "" : primanja.valuta_id.toString(),
-          datum: isAddMode ? "" : getDatum(),
+          datum: getDatum(),
+          // datum: { date },
           odnossodem: isAddMode ? "0" : getOdnosoSoDEM(),
           vobanka: isAddMode ? 0 : getVoBanka(),
           trans_id: isAddMode ? "" : getTransId(),
@@ -365,11 +402,29 @@ function PrimanjaEditScreen({ route }) {
           name="tip_primanje"
           placeholder="Tip na Primanje"
         />
+
+        <Button onPress={showDatepicker} title="Odberi Datum" />
+        {show && (
+          <DateTimePicker
+            dateFormat="dayofweek day month"
+            display="default"
+            is24Hour={true}
+            locale="de-DE"
+            minimumDate={new Date(1990, 0, 1)}
+            mode={mode}
+            onChange={onChangeDatePicker}
+            testID="dateTimePicker"
+            value={date}
+          />
+        )}
+
         <FormField
           maxLength={255}
           name="datum"
           keyboardType="numeric"
           placeholder="Datum"
+          value={getDatum()}
+          // value={date}
         />
         <FormField
           keyboardType="numeric"
