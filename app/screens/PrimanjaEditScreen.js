@@ -55,6 +55,7 @@ const validationSchema = Yup.object().shape({
 
 function PrimanjaEditScreen({ route }) {
   const [date, setDate] = useState(new Date());
+  const [datePicker, setDatePicker] = useState(false);
   const [defaultCurrency, setDefaultCurrency] = useState(0);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -184,15 +185,34 @@ function PrimanjaEditScreen({ route }) {
     console.log("isAddMode = <" + isAddMode + ">");
 
     if (isAddMode) {
-      // console.log("date = <" + date + ">");
-      // console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
+      // console.log("selectedDate = <" + selectedDate + ">");
+      console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
 
+      // primanja.datum = "20.08.2021";
+      // primanja.datum = new Date();
+      // primanja.datum = date.toString();
+      // primanja.datum = date.toDateString();
+      // primanja.datum = Moment(date).format("DD.MM.YYYY");
       // console.log("END getDatum");
       return Moment(date).format("DD.MM.YYYY");
+      // return Moment(primanja.datum).format("DD.MM.YYYY");
     } else {
-      // console.log("END getDatum");
-      // return(<View> {Moment(dt).format('d MMM YYYY')} </View>) //basically you can do all sorts of the formatting and others
-      return Moment(primanja.datum).format("DD.MM.YYYY");
+      console.log("datePicker = <" + datePicker + ">");
+      // setDate(primanja.datum);
+
+      if (datePicker) {
+        console.log("Moment(date).format(DD.MM.YYYY)");
+        return Moment(date).format("DD.MM.YYYY");
+      } else {
+        var datumLocale = primanja.datum;
+        console.log("datumLocale = <" + datumLocale + ">");
+
+        // setDate(primanja.datum);
+        // setDate(datumLocale);
+
+        console.log("END getDatum");
+        return Moment(datumLocale).format("DD.MM.YYYY");
+      }
     }
   };
   const getOdnosoSoDEM = () => {
@@ -282,6 +302,18 @@ function PrimanjaEditScreen({ route }) {
     );
   };
 
+  function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(
+      date.getTime() + date.getTimezoneOffset() * 60 * 1000
+    );
+
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate;
+  }
   const handleSubmit = async (primanja2, { resetForm }) => {
     console.log("START handleSubmit");
 
@@ -289,9 +321,12 @@ function PrimanjaEditScreen({ route }) {
     // primanja2.artikal_id = artikal.artikal_id;
     // primanja2.vid_id = artikal.vid_id;
     // console.log("idArtikal = " + idArtikal);
-    console.log("primanja2.vraboten_id = " + primanja2.vraboten_id);
-    console.log("3. primanja2 = " + JSON.stringify(primanja2, null, 2));
-
+    // console.log("primanja2.vraboten_id = " + primanja2.vraboten_id);
+    // console.log("3. primanja2 = " + JSON.stringify(primanja2, null, 2));
+    // primanja2.datum = date;
+    // primanja2.datum = convertUTCDateToLocalDate(new date.toLocaleString());
+    // primanja2.datum = Moment(date).format("DD.MM.YYYY"); //+DT-20210803: With this it works
+    primanja2.datum = getDatum();
     setProgress(0);
     setUploadVisible(true);
     console.log("");
@@ -342,8 +377,13 @@ function PrimanjaEditScreen({ route }) {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === "ios");
     setDate(currentDate);
+    // primanja2.datum = currentDate;
 
-    console.log("date = " + date);
+    // isAddMode = true;
+
+    console.log("selectedDate = " + selectedDate);
+
+    setDatePicker(true);
 
     console.log("END onChangeDatePicker");
   };
@@ -375,8 +415,17 @@ function PrimanjaEditScreen({ route }) {
           },
           mesec: isAddMode ? "" : getMesec(),
           valuta_id: isAddMode ? "" : primanja.valuta_id.toString(),
+          // datum: isAddMode ? "" : primanja.datum,
+          // datum: "22.07.2021",
+          // datum: { selectedDate },
+          // datum: isAddMode ? selectedDate : getDatum,
+          // datum: isAddMode ? date : getDatum,
+          // datum: date,
+          // datum: Moment(date).format("DD.MM.YYYY"),
+          // datum: primanja.datum,
+          // datum: isAddMode ? getDatum() : primanja.datum,
+          // datum: isAddMode ? getDatum() : getDatum(),
           datum: getDatum(),
-          // datum: { date },
           odnossodem: isAddMode ? "0" : getOdnosoSoDEM(),
           vobanka: isAddMode ? 0 : getVoBanka(),
           trans_id: isAddMode ? "" : getTransId(),
@@ -424,7 +473,10 @@ function PrimanjaEditScreen({ route }) {
           keyboardType="numeric"
           placeholder="Datum"
           value={getDatum()}
+          // value={selectedDate}
           // value={date}
+          // value="23.08.2021"
+          // value={Moment(date).format("DD.MM.YYYY")} //DT-20210802: With this, it works
         />
         <FormField
           keyboardType="numeric"
@@ -438,7 +490,7 @@ function PrimanjaEditScreen({ route }) {
           name="valuta"
           numberOfColumns={3}
           PickerItemComponent={CategoryPickerItem}
-          placeholder="Valutan"
+          placeholder="Valuta"
           width="100%"
         />
         <FormField

@@ -32,10 +32,6 @@ const validationSchema = Yup.object().shape({
 function ArtikalEditScreen({ route }) {
   console.log("START ArtikalEditScreen");
 
-  // const [imeArtikal, setImeArtikal] = useState("");
-  // const [idArtikal, setIdArtikal] = useState(artikal.artikal_id);
-
-  // const location = useLocation();
   const [vidData, setVidData] = useState([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -108,11 +104,7 @@ function ArtikalEditScreen({ route }) {
     // console.log("START handleSubmit");
 
     console.log("1. artikal2 = " + JSON.stringify(artikal2, null, 2));
-    // artikal2.artikal_id = artikal.artikal_id;
-    // artikal2.vid_id = artikal.vid_id;
     console.log("2. artikal2.vid_id = " + artikal2.vid_id);
-    // console.log("idArtikal = " + idArtikal);
-    // console.log("id = " + id);
     console.log("3. artikal2 = " + JSON.stringify(artikal2, null, 2));
 
     isEnabled ? (artikal2.steuerrelevant = 1) : (artikal2.steuerrelevant = 0);

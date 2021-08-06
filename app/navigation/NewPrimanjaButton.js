@@ -9,7 +9,7 @@ function NewPrimanjaButton({ onPress }) {
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
         <MaterialCommunityIcons
-          name="cash-plus"
+          name="cash-100"
           color={colors.white}
           size={40}
         />
@@ -21,7 +21,7 @@ function NewPrimanjaButton({ onPress }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: colors.primary,
+    backgroundColor: colors.medium,
     borderColor: colors.white,
     borderRadius: 40,
     borderWidth: 10,

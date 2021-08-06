@@ -122,13 +122,7 @@ const AppNavigator = () => {
               onPress={() => navigation.navigate(routes.PRIMANJA_EDIT)}
             />
           ),
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="plus-circle"
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons />,
         })}
       />
       <Tab.Screen

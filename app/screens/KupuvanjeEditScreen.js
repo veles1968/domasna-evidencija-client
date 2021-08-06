@@ -56,6 +56,7 @@ function KupuvanjeEditScreen({ route }) {
   const [artikalId, setArtikalId] = useState("");
   const [kupovnaCena, setKupovnaCena] = useState("");
   const [date, setDate] = useState(new Date());
+  const [datePicker, setDatePicker] = useState(false);
   const [defaultCurrency, setDefaultCurrency] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
   const [error, setError] = useState(false);
@@ -185,18 +186,39 @@ function KupuvanjeEditScreen({ route }) {
   };
 
   const getDatum = () => {
-    // console.log("START getDatum");
+    console.log("START getDatum");
+
+    console.log("isAddMode = <" + isAddMode + ">");
 
     if (isAddMode) {
-      // console.log("date = <" + date + ">");
-      // console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
+      // console.log("selectedDate = <" + selectedDate + ">");
+      console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
 
+      // primanja.datum = "20.08.2021";
+      // primanja.datum = new Date();
+      // primanja.datum = date.toString();
+      // primanja.datum = date.toDateString();
+      // primanja.datum = Moment(date).format("DD.MM.YYYY");
       // console.log("END getDatum");
       return Moment(date).format("DD.MM.YYYY");
+      // return Moment(primanja.datum).format("DD.MM.YYYY");
     } else {
-      // console.log("END getDatum");
-      // return(<View> {Moment(dt).format('d MMM YYYY')} </View>) //basically you can do all sorts of the formatting and others
-      return Moment(kupuvanje.datum).format("DD.MM.YYYY");
+      console.log("datePicker = <" + datePicker + ">");
+      // setDate(primanja.datum);
+
+      if (datePicker) {
+        console.log("Moment(date).format(DD.MM.YYYY)");
+        return Moment(date).format("DD.MM.YYYY");
+      } else {
+        var datumLocale = kupuvanje.datum;
+        console.log("datumLocale = <" + datumLocale + ">");
+
+        // setDate(primanja.datum);
+        // setDate(datumLocale);
+
+        console.log("END getDatum");
+        return Moment(datumLocale).format("DD.MM.YYYY");
+      }
     }
   };
 
@@ -281,6 +303,8 @@ function KupuvanjeEditScreen({ route }) {
     console.log("1. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
     // console.log("kupuvanje2.vraboten_id = " + kupuvanje2.vraboten_id);
     console.log("2. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
+
+    kupuvanje2.datum = getDatum();
 
     setProgress(0);
     setUploadVisible(true);

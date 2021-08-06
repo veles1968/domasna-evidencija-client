@@ -97,27 +97,6 @@ function PrimanjasScreen({ navigation }) {
     console.log("2. useEffect");
   }, [isFocused]);
 
-  // const useSort = (someArray, initialSortKey) => {
-  //   const [state, setState] = useState({
-  //     isAscending: false,
-  //     sortKey: initialSortKey,
-  //   });
-
-  //   // Let's pretend `makeSortComparator` exists for simplicity
-  //   const comparator = makeSortComparator(state);
-  //   const sortedData = someArray.slice().sort(comparator);
-  //   return {
-  //     ...state,
-  //     sortedData,
-  //     toggleAscending: () =>
-  //       setState((state) => ({
-  //         ...state,
-  //         isAscending: !state.isAscending,
-  //       })),
-  //     setSortKey: (sortKey) => setState((state) => ({ ...state, sortKey })),
-  //   };
-  // };
-
   const getAllPrimanjas = async () => {
     console.log("START getAllPrimanjas-1");
 
@@ -189,23 +168,6 @@ function PrimanjasScreen({ navigation }) {
     /* End: Process the tapping on sorting buttons */
   }
 
-  // const sortByDate = () => {
-  //   const { primanjaSorted } = primanjaData;
-  //   let newPrimanjaSorted = primanjaSorted;
-  //   if (isOldestFirst) {
-  //     newPrimanjaSorted = primanjaSorted.sort((a, b) => a.datum > b.datum);
-  //   } else {
-  //     newPrimanjaSorted = primanjaSorted.sort((a, b) => a.datum < b.datum);
-  //   }
-
-  //   setIsOldestFirst(!isOldestFirst);
-  //   setPrimanjaSorted(newPrimanjaSorted);
-  // };
-
-  // const toggleSortDate = () => {
-  //   return sortByDate();
-  // };
-
   {
     /* Begin: Sort by DATUM, TIP_PRIMANJE, VID */
   }
@@ -221,14 +183,6 @@ function PrimanjasScreen({ navigation }) {
     };
 
     setSortType(type, console.log("2. sortType = " + sortType));
-    // const sortProperty = types[type];
-    // const sortProperty = fieldNames[type];
-    // console.log("1. sortProperty = " + JSON.stringify(sortProperty));
-    // console.log("1. type = " + type);
-    // console.log("2. sortType = " + sortType);
-
-    // console.log("3. primanjaData = " + JSON.stringify(primanjaData, null, 2));
-
     console.log("4. isOldestFirst = " + isOldestFirst);
 
     const sorted = [...primanjaData].sort((a, b) => {
@@ -246,21 +200,11 @@ function PrimanjasScreen({ navigation }) {
           return a.tip_primanje.toUpperCase() < b.tip_primanje.toUpperCase();
         }
       }
-
-      // return a.datum < b.datum; // -> newest first
-      // return a.datum > b.datum; // -> oldest first
-      // return isOldestFirst ? a.datum > b.datum : a.datum > b.datum;
-      // return b.iznos - a.iznos;
-      // return b.tip_primanje - a.tip_primanje;
     });
-
-    // console.log("4. sorted = " + JSON.stringify(sorted, null, 2));
 
     setPrimanjaData(sorted);
 
     setIsOldestFirst(!isOldestFirst);
-
-    // console.log("5. primanjaData = " + JSON.stringify(primanjaData, null, 2));
 
     console.log("END sortFlatList");
   };
@@ -286,9 +230,13 @@ function PrimanjasScreen({ navigation }) {
   }
 
   function getSubTitle(primanja) {
-    Moment.locale("de");
+    // Moment.locale("de");
     var datumLocale = primanja.datum;
     // return(<View> {Moment(dt).format('d MMM YYYY')} </View>) //basically you can do all sorts of the formatting and others
+
+    // console.log("1. primanja.datum = <" + primanja.datum + ">");
+    // console.log("2. datumLocale = <" + datumLocale + ">");
+    // console.log("3. primanja.tip_primanje = <" + primanja.tip_primanje + ">");
 
     return `Iznos: ${primanja.iznos} ${primanja.ime_valuta}\nDatum: ${Moment(
       datumLocale
@@ -332,18 +280,8 @@ function PrimanjasScreen({ navigation }) {
       {/* End: Sorting buttons on the top of the screen above the data-flat list */}
 
       <FlatList
-        // data={getArtikalsApi.data}
         data={primanjaData}
-        // keyExtractor={(item, index) => item.primanja_id}
-        // keyExtractor={(item, index) => {
-        //   return item.primanja_id.toString();
-        // }}
-        // keyExtractor={(item) => item.primanja_id.toString()}
         keyExtractor={(item) => item.primanja_id.toString()}
-        // keyExtractor={(item) => item[0].toString()}
-        // keyExtractor={(item) => item[0]}
-        // keyExtractor={(item) => item[0].datum}
-        // keyExtractor={(item) => item.datum}
         renderItem={({ item }) => (
           <Card
             // ARTIKAL_ID     = item[0]
@@ -357,7 +295,6 @@ function PrimanjasScreen({ navigation }) {
             // UPDUSER        = item[8]
             // key={item[0]}
             key={item.primanja_id}
-            // title={`${item.tip_primanje}`}
             title={getTitle(item)}
             subTitle={getSubTitle(item)}
             onPress={() => {
