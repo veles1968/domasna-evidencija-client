@@ -325,7 +325,9 @@ function KupuvanjesScreen({ route }) {
             key={item.kupdatum_id}
             title={getTitle(item)}
             subTitle={getSubTitle(item)}
+            // subTitle={item.invoice_url}
             onPress={() => {
+              console.log("KupuvanjeEdit pressed");
               navigation.navigate(routes.KUPUVANJE_EDIT, item);
             }}
             renderRightActions={() => (

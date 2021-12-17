@@ -2,6 +2,7 @@ import axios from "axios";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   Image,
   StatusBar,
@@ -84,6 +85,7 @@ function KupuvanjeEditScreen({ route }) {
     console.log("kupuvanje = " + JSON.stringify(kupuvanje, null, 2));
 
     isAddMode = !kupuvanje.kupdatum_id;
+
     console.log("isAddMode = " + isAddMode);
     console.log("kupuvanje.kupdatum_id = " + kupuvanje.kupdatum_id);
     console.log("kupuvanje.valuta_id = " + kupuvanje.valuta_id);
@@ -102,6 +104,10 @@ function KupuvanjeEditScreen({ route }) {
     getAllArtikals(mounted);
 
     if (route.params) {
+    }
+
+    if (!isAddMode) {
+      setDisplayForm(true);
     }
 
     console.log("END ************ useEffect ************");
@@ -191,20 +197,9 @@ function KupuvanjeEditScreen({ route }) {
     console.log("isAddMode = <" + isAddMode + ">");
 
     if (isAddMode) {
-      // console.log("selectedDate = <" + selectedDate + ">");
-      console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
-
-      // primanja.datum = "20.08.2021";
-      // primanja.datum = new Date();
-      // primanja.datum = date.toString();
-      // primanja.datum = date.toDateString();
-      // primanja.datum = Moment(date).format("DD.MM.YYYY");
-      // console.log("END getDatum");
       return Moment(date).format("DD.MM.YYYY");
-      // return Moment(primanja.datum).format("DD.MM.YYYY");
     } else {
       console.log("datePicker = <" + datePicker + ">");
-      // setDate(primanja.datum);
 
       if (datePicker) {
         console.log("Moment(date).format(DD.MM.YYYY)");
@@ -212,12 +207,20 @@ function KupuvanjeEditScreen({ route }) {
       } else {
         var datumLocale = kupuvanje.datum;
         console.log("datumLocale = <" + datumLocale + ">");
-
-        // setDate(primanja.datum);
-        // setDate(datumLocale);
-
         console.log("END getDatum");
         return Moment(datumLocale).format("DD.MM.YYYY");
+      }
+    }
+  };
+
+  const getOpis = () => {
+    if (isAddMode) {
+      return "";
+    } else {
+      if (kupuvanje.opis) {
+        return kupuvanje.opis.toString();
+      } else {
+        return "";
       }
     }
   };
@@ -292,17 +295,15 @@ function KupuvanjeEditScreen({ route }) {
 
     console.log("date = " + date);
 
+    setDatePicker(true); //+DT-20211125
+
     console.log("END onChangeDatePicker");
   };
+
   const handleSubmit = async (kupuvanje2, { resetForm }) => {
     console.log("START handleSubmit");
 
-    kupuvanje2.artikal_id = artikalId;
-    kupuvanje2.kupovnacena = kupovnaCena;
-
     console.log("1. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
-    // console.log("kupuvanje2.vraboten_id = " + kupuvanje2.vraboten_id);
-    console.log("2. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
 
     kupuvanje2.datum = getDatum();
 
@@ -313,10 +314,15 @@ function KupuvanjeEditScreen({ route }) {
     var result;
 
     if (isAddMode) {
+      kupuvanje2.artikal_id = artikalId;
+      kupuvanje2.kupovnacena = kupovnaCena;
       result = await kupuvanjesApi.addKupuvanje({ ...kupuvanje2 }, (progress) =>
         setProgress(progress)
       );
     } else {
+      kupuvanje2.artikal_id = kupuvanje.artikal_id;
+      kupuvanje2.kupovnacena = kupuvanje.kupovnacena;
+      kupuvanje2.insuser = kupuvanje.insuser;
       result = await kupuvanjesApi.updateKupuvanjes(
         { ...kupuvanje2 },
         (progress) => setProgress(progress)
@@ -334,29 +340,6 @@ function KupuvanjeEditScreen({ route }) {
 
     console.log("END handleSubmit");
   };
-
-  // const handleChange = async (text) => {
-  //   console.log("START handleChange");
-  //   setImeArtikal(text);
-  //   if (!text) {
-  //     console.log("2. handleChange: text is empty");
-  //     return;
-  //   }
-
-  //   console.log("imeArtikal = " + imeArtikal);
-  //   console.log("text = " + text);
-
-  //   setLoading(true);
-  //   const response = await artikalsApi.getArtikalsByIme(text);
-  //   setLoading(false);
-
-  //   setError(!response.ok);
-  //   setArtikalData(response.data);
-
-  //   console.log("error = " + error);
-
-  //   console.log("END  handleChange");
-  // };
 
   const handleSearch = (text) => {
     console.log("START handleSearch");
@@ -411,52 +394,54 @@ function KupuvanjeEditScreen({ route }) {
   }
 
   return (
-    <Screen style={styles.screen} editScreen={false}>
+    <Screen style={styles.screen} editScreen>
       <UploadScreen
         onDone={() => setUploadVisible(false)}
         progress={progress}
         visible={uploadVisible}
       />
 
-      <FlatList
-        data={artikalData}
-        initialNumToRender={3}
-        keyExtractor={(item) => item.artikal_id.toString()}
-        ListFooterComponent={<Text>Nema Artikli</Text>}
-        ListHeaderComponent={
-          <>
-            <SearchBar
-              lightTheme
-              onChangeText={handleSearch}
-              placeholder="Vnesi Artikal"
-              round
-              value={imeArtikal}
+      {isAddMode && (
+        <FlatList
+          data={artikalData}
+          initialNumToRender={3}
+          keyExtractor={(item) => item.artikal_id.toString()}
+          ListFooterComponent={<Text>Nema Artikli</Text>}
+          ListHeaderComponent={
+            <>
+              <SearchBar
+                lightTheme
+                onChangeText={handleSearch}
+                placeholder="Vnesi Artikal"
+                round
+                value={imeArtikal}
+              />
+            </>
+          }
+          renderItem={({ item }) => (
+            <Card
+              key={item.artikal_id}
+              title={item.ime_artikal}
+              subTitle={`Cena: ${item.cena}\nVid: ${item.ime_vid}`}
+              onPress={() => {
+                setDisplayForm(true);
+                setArtikalData("");
+                setSelectedArtikal(
+                  `${item.ime_artikal} / ${item.cena} / ${item.ime_vid}`
+                );
+                // 6;
+                console.log(
+                  `Artikal ID has been selected: ${item.ime_artikal} / ${item.artikal_id} / ${item.cena}`
+                );
+                setArtikalId(item.artikal_id);
+                setKupovnaCena(item.cena);
+              }}
             />
-          </>
-        }
-        renderItem={({ item }) => (
-          <Card
-            key={item.artikal_id}
-            title={item.ime_artikal}
-            subTitle={`Cena: ${item.cena}\nVid: ${item.ime_vid}`}
-            onPress={() => {
-              setDisplayForm(true);
-              setArtikalData("");
-              setSelectedArtikal(
-                `${item.ime_artikal} / ${item.cena} / ${item.ime_vid}`
-              );
-              // 6;
-              console.log(
-                `Artikal ID has been selected: ${item.ime_artikal} / ${item.artikal_id} / ${item.cena}`
-              );
-              setArtikalId(item.artikal_id);
-              setKupovnaCena(item.cena);
-            }}
-          />
-        )}
-        stickyHeaderIndices={[0]}
-        value={imeArtikal}
-      />
+          )}
+          stickyHeaderIndices={[0]}
+          value={imeArtikal}
+        />
+      )}
 
       {displayForm && (
         <Form
@@ -475,7 +460,7 @@ function KupuvanjeEditScreen({ route }) {
 
             vraboten_id: isAddMode ? "1" : kupuvanje.vraboten_id.toString(),
 
-            opis: isAddMode ? "" : kupuvanje.opis.toString(),
+            opis: getOpis(),
 
             steuerrelevant: isAddMode
               ? "0"
@@ -490,14 +475,26 @@ function KupuvanjeEditScreen({ route }) {
           onDelete={handleDelete}
           validationSchema={validationSchema}
         >
-          <FormField
-            editable={false}
-            maxLength={50}
-            name="ime_artikal"
-            placeholder="Artikal"
-            value={selectedArtikal}
-            width="100%"
-          />
+          {isAddMode && (
+            <FormField
+              editable={false}
+              maxLength={50}
+              name="ime_artikal"
+              placeholder="Artikal"
+              value={isAddMode && selectedArtikal}
+              width="100%"
+            />
+          )}
+          {!isAddMode && (
+            <FormField
+              editable={false}
+              maxLength={50}
+              name="ime_artikal"
+              placeholder="Artikal"
+              // value={selectedArtikal}
+              width="100%"
+            />
+          )}
           <Button onPress={showDatepicker} title="Odberi Datum" />
 
           {show && (
@@ -544,8 +541,28 @@ function KupuvanjeEditScreen({ route }) {
             placeholder="Valuta"
             width="100%"
           />
+          <FormField
+            keyboardType="numeric"
+            maxLength={10}
+            name="insdate"
+            placeholder="Datum na vnes"
+            width="100%"
+            editable={false}
+          />
+          <FormField
+            maxLength={50}
+            name="insuser"
+            placeholder="Od"
+            width="100%"
+            editable={false}
+          />
 
           <SubmitButton title="Save" />
+          {isAddMode ? (
+            false
+          ) : (
+            <DeleteButton title="Delete" onPress={handleDelete} />
+          )}
         </Form>
       )}
     </Screen>
@@ -553,25 +570,6 @@ function KupuvanjeEditScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  // screen: {
-  // backgroundColor: colors.light,
-  // flexWrap: "wrap",
-  // alignItems: "stretch",
-  // flexDirection: "row",
-  // flex: 1,
-  // justifyContent: "flex-end",
-  // marginTop: StatusBar.currentHeight || 0,
-  // alignItems: "center",
-  // },
-  // container: {
-  //   flex: 1,
-  //   marginTop: StatusBar.currentHeight || 0,
-  // },
-  // item: {
-  //   padding: 20,
-  //   marginVertical: 8,
-  //   marginHorizontal: 16,
-  // },
   container: {
     backgroundColor: "#f8f8f8",
     flex: 0.4,
@@ -595,6 +593,10 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: "pink",
     marginHorizontal: 20,
+  },
+  screen: {
+    padding: 20,
+    backgroundColor: colors.light,
   },
   title: {
     fontSize: 14,

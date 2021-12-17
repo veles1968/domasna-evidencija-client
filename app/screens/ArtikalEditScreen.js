@@ -20,7 +20,11 @@ import UploadScreen from "./UploadScreen";
 const validationSchema = Yup.object().shape({
   artikal_id: Yup.string().label("ID"),
   ime_artikal: Yup.string().required().min(1).label("Ime na Artikal"),
-  cena: Yup.number().required().min(1).max(10000).label("Cena"),
+  cena: Yup.number()
+    .required("Cenata mora da se vnese")
+    .min(1)
+    .max(10000)
+    .label("Cena"),
   steuerrelevant: Yup.string().label("Steuerrelevant"),
   vid: Yup.object()
     .required("Vid e obavezno da se vnese")

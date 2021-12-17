@@ -25,7 +25,7 @@ function Screen({ children, editScreen = false, style }) {
 const styles = StyleSheet.create({
   screen: {
     paddingTop: Constants.statusBarHeight - 40, //+-DT-20210503
-    // paddingTop: 15,                          //-DT-20210503
+    // paddingTop: 15, //-DT-20210503
     flex: 1,
   },
   view: {

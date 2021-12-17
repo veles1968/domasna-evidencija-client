@@ -47,6 +47,11 @@ const validationSchema = Yup.object().shape({
     .label("primanja.vraboten_id"),
   tip_primanje: Yup.string().required().min(1).label("Tip na Primanje"),
   datum: Yup.string().required().min(1).label("Datum"),
+  iznos: Yup.number()
+    .required("Iznosot mora da se vnese")
+    .min(1)
+    .max(100000000000)
+    .label("Iznos"),
   valuta: Yup.object()
     .required("Valuta e obavezno da se vnese")
     .nullable()
@@ -185,20 +190,10 @@ function PrimanjaEditScreen({ route }) {
     console.log("isAddMode = <" + isAddMode + ">");
 
     if (isAddMode) {
-      // console.log("selectedDate = <" + selectedDate + ">");
       console.log("date = <" + Moment(date).format("DD.MM.YYYY") + ">");
-
-      // primanja.datum = "20.08.2021";
-      // primanja.datum = new Date();
-      // primanja.datum = date.toString();
-      // primanja.datum = date.toDateString();
-      // primanja.datum = Moment(date).format("DD.MM.YYYY");
-      // console.log("END getDatum");
       return Moment(date).format("DD.MM.YYYY");
-      // return Moment(primanja.datum).format("DD.MM.YYYY");
     } else {
       console.log("datePicker = <" + datePicker + ">");
-      // setDate(primanja.datum);
 
       if (datePicker) {
         console.log("Moment(date).format(DD.MM.YYYY)");
@@ -206,10 +201,6 @@ function PrimanjaEditScreen({ route }) {
       } else {
         var datumLocale = primanja.datum;
         console.log("datumLocale = <" + datumLocale + ">");
-
-        // setDate(primanja.datum);
-        // setDate(datumLocale);
-
         console.log("END getDatum");
         return Moment(datumLocale).format("DD.MM.YYYY");
       }
@@ -415,16 +406,6 @@ function PrimanjaEditScreen({ route }) {
           },
           mesec: isAddMode ? "" : getMesec(),
           valuta_id: isAddMode ? "" : primanja.valuta_id.toString(),
-          // datum: isAddMode ? "" : primanja.datum,
-          // datum: "22.07.2021",
-          // datum: { selectedDate },
-          // datum: isAddMode ? selectedDate : getDatum,
-          // datum: isAddMode ? date : getDatum,
-          // datum: date,
-          // datum: Moment(date).format("DD.MM.YYYY"),
-          // datum: primanja.datum,
-          // datum: isAddMode ? getDatum() : primanja.datum,
-          // datum: isAddMode ? getDatum() : getDatum(),
           datum: getDatum(),
           odnossodem: isAddMode ? "0" : getOdnosoSoDEM(),
           vobanka: isAddMode ? 0 : getVoBanka(),

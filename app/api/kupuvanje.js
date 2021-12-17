@@ -50,7 +50,6 @@ export const updateKupuvanjes = (kupuvanje, onUploadProgress) => {
     datum: kupuvanje.datum,
     ime_artikal: kupuvanje.ime_artikal,
     ime_vid: kupuvanje.ime_vid,
-    vid_id: vid.vid_id,
     total_amount: kupuvanje.total_amount,
     artikal_id: kupuvanje.artikal_id,
     valuta_id: kupuvanje.valuta.value,
@@ -59,11 +58,15 @@ export const updateKupuvanjes = (kupuvanje, onUploadProgress) => {
     opis: kupuvanje.opis,
     cek: kupuvanje.cek,
     cek_id: kupuvanje.cek_id,
-    vraboten_id: kupuvanje.vraboten.value,
+    vraboten_id: kupuvanje.vraboten_id,
     mesec_struja: kupuvanje.mesec_struja,
     rati_id: kupuvanje.rati_id,
     trans_id: kupuvanje.trans_id,
     steuerrelevant: kupuvanje.steuerrelevant,
+    insuser: kupuvanje.insuser,
+    insdate: kupuvanje.insdate,
+    upduser: kupuvanje.upduser,
+    upddate: kupuvanje.upddate,
   };
 
   console.log("data = " + JSON.stringify(data));
