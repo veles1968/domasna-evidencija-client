@@ -124,7 +124,7 @@ function KupuvanjeEditScreen({ route }) {
   }, [fullData]);
 
   const getAllArtikals = async (mounted) => {
-    console.log("START getAllArtikals-1");
+    // console.log("START getAllArtikals-1");
 
     setLoading(true);
     const response = await artikalsApi.getArtikals();
@@ -133,18 +133,18 @@ function KupuvanjeEditScreen({ route }) {
     setError(!response.ok);
 
     if (mounted) {
-      console.log("1. setArtikalData");
+      // console.log("1. setArtikalData");
       setArtikalData(response.data);
-      console.log("2. setArtikalData");
+      // console.log("2. setArtikalData");
       setFullData(response.data);
     }
 
-    console.log("END getAllArtikals-1");
+    // console.log("END getAllArtikals-1");
     return response;
   };
 
   const getAllValutas = async (mounted) => {
-    console.log("START getAllValutas-1");
+    // console.log("START getAllValutas-1");
 
     setLoading(true);
     const response = await valutasApi.getValutas();
@@ -156,19 +156,19 @@ function KupuvanjeEditScreen({ route }) {
       setValutaData(response.data);
     }
 
-    console.log("END getAllValutas-1");
+    // console.log("END getAllValutas-1");
     return response;
   };
 
   const getInsDate = () => {
-    console.log("START getInsDate");
+    // console.log("START getInsDate");
 
     if (isAddMode) {
       // console.log("IME_ARTIKAL = <>");
 
       return "";
     } else {
-      console.log("END getInsDate");
+      // console.log("END getInsDate");
       // var datumLocale = kupuvanje.insdate;
       // return(<View> {Moment(dt).format('d MMM YYYY')} </View>) //basically you can do all sorts of the formatting and others
 
@@ -177,12 +177,12 @@ function KupuvanjeEditScreen({ route }) {
   };
 
   const getTransId = () => {
-    console.log("START getTransId");
+    // console.log("START getTransId");
 
     if (isAddMode) {
       return "";
     } else {
-      console.log("END getTransId");
+      // console.log("END getTransId");
       if (kupuvanje.trans_id) {
         return kupuvanje.trans_id.toString();
       } else {
@@ -192,22 +192,13 @@ function KupuvanjeEditScreen({ route }) {
   };
 
   const getDatum = () => {
-    console.log("START getDatum");
-
-    console.log("isAddMode = <" + isAddMode + ">");
-
     if (isAddMode) {
       return Moment(date).format("DD.MM.YYYY");
     } else {
-      console.log("datePicker = <" + datePicker + ">");
-
       if (datePicker) {
-        console.log("Moment(date).format(DD.MM.YYYY)");
         return Moment(date).format("DD.MM.YYYY");
       } else {
         var datumLocale = kupuvanje.datum;
-        console.log("datumLocale = <" + datumLocale + ">");
-        console.log("END getDatum");
         return Moment(datumLocale).format("DD.MM.YYYY");
       }
     }
@@ -225,12 +216,22 @@ function KupuvanjeEditScreen({ route }) {
     }
   };
 
-  const deleteExecution = async () => {
+  // const deleteExecution = async (kupuvanje2, { resetForm }) => {
+  const deleteExecution = async (kupuvanje2) => {
+    // const deleteExecution = async () => {
+
+    console.log("START deleteExecution");
+
     setProgress(0);
     setUploadVisible(true);
+    var result;
 
-    result = await kupuvanjesApi.deletePrimanja(
-      kupuvanje.kupdatum_id,
+    kupuvanje2.artikal_id = kupuvanje.artikal_id;
+    kupuvanje2.kupdatum_id = kupuvanje.kupdatum_id;
+
+    result = await kupuvanjesApi.deleteKupuvanje(
+      { ...kupuvanje2 },
+      // { kupuvanje },
       (progress) => setProgress(progress)
     );
 
@@ -239,20 +240,22 @@ function KupuvanjeEditScreen({ route }) {
       return alert("Could not delete the kupuvanje");
     }
 
-    // setUploadVisible(false);
-
     navigation.goBack(null);
-    console.log("END handleDelete");
+
     // navigation.navigate(routes.PRIMANJA_LIST);
-    // resetForm();
+    // if (!isAddMode) {
+    //   resetForm();
+    // }
+
+    console.log("END deleteExecution");
   };
 
-  const handleDelete = () => {
+  // const handleDelete = async (kupuvanje2, { resetForm }) => {
+  const handleDelete = async () => {
     console.log("START handleDelete");
 
-    // console.log("1. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
-    // console.log("kupuvanje2.kupdatum_id = " + kupuvanje2.kupdatum_id);
     console.log("kupuvanje.kupdatum_id = " + kupuvanje.kupdatum_id);
+    console.log("kupuvanje.artikal_id = " + kupuvanje.artikal_id);
 
     Alert.alert(
       "Brishenje",
@@ -265,10 +268,11 @@ function KupuvanjeEditScreen({ route }) {
           },
           style: "cancel",
         },
-        { text: "Da", onPress: () => deleteExecution() },
+        { text: "Da", onPress: () => deleteExecution(kupuvanje) },
       ],
       { cancelable: false }
     );
+    console.log("END handleDelete");
   };
 
   const showMode = (currentMode) => {
