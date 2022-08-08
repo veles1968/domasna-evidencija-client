@@ -120,7 +120,7 @@ function KupuvanjeEditScreen({ route }) {
   }, [artikalData]);
 
   useEffect(() => {
-    console.log("fullData.length = <" + fullData.length + ">");
+    // console.log("fullData.length = <" + fullData.length + ">");
   }, [fullData]);
 
   const getAllArtikals = async (mounted) => {

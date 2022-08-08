@@ -4,7 +4,16 @@ import client from "./client";
 const endpoint = "/artikalsvids";
 const saveendpoint = "/artikals";
 
+// apiUrl: "http://localhost:9000/api", // LAN Karlsruhe
 const getArtikals = () => client.get(endpoint);
+// const getArtikals = () => client.get("http://localhost:9000/api/artikalsvids");
+// const getArtikals = () => {
+//   console.log("START getArtikals");
+//   console.log("http://192.168.178.30:9000/api/artikalsvids");
+//   console.log("END  getArtikals");
+
+//   client.get("http://192.168.178.30:9000/api/artikalsvids");
+// };
 
 const getArtikalsByIme = (imeArtikal) =>
   client.get(endpoint + "?ime_artikal=" + imeArtikal);

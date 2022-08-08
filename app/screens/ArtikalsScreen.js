@@ -90,7 +90,7 @@ function ArtikalsScreen({ navigation }) {
   };
 
   const getAllArtikals = async () => {
-    console.log("START getAllArtikals-1");
+    console.log("START getAllArtikals-2");
 
     setLoading(true);
     const response = await artikalsApi.getArtikals();
@@ -103,7 +103,7 @@ function ArtikalsScreen({ navigation }) {
     // console.log("6. response.data: " + JSON.stringify(response.data[0]));
     setArtikalData(response.data);
 
-    console.log("END getAllArtikals-1");
+    console.log("END getAllArtikals-2");
     return response;
   };
 
