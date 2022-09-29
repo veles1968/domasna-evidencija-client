@@ -8,8 +8,8 @@ import {
   StatusBar,
   ScrollView,
   StyleSheet,
-  // Text,
-  // TextInput,
+  Switch,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -26,73 +26,81 @@ import {
   SubmitButton,
 } from "../components/forms";
 import ActivityIndicator from "../components/ActivityIndicator";
-import AppText from "../components/Text";
-import AppTextInput from "../components/TextInput";
-import artikalsApi from "../api/artikals";
+import banksApi from "../api/banks";
+import bankTransactionsApi from "../api/banktransactions";
 import Button from "../components/Button";
 import CategoryPickerItem from "../components/CategoryPickerItem";
 import Card from "../components/Card";
 import colors from "../config/colors";
-import kupuvanjesApi from "../api/kupuvanje";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
-import Text from "../components/TextInput";
-import TextInput from "../components/TextInput";
+import AppTextInput from "../components/TextInput";
 import UploadScreen from "./UploadScreen";
 import valutasApi from "../api/valutas";
-import vidsApi from "../api/vids";
 
 const validationSchema = Yup.object().shape({
-  kupdatum_id: Yup.string().label("ID"),
-  ime_artikal: Yup.string().label("Ime na Artikal"),
+  trans_id: Yup.string().label("ID"),
+  ime_banka: Yup.string().label("Ime na Banka"),
   datum: Yup.string().required().min(1).label("Datum"),
-  opis: Yup.string().label("Opis"),
+  komentar: Yup.string().label("Komentar"),
   valuta: Yup.object()
     .required("Valuta e obavezno da se vnese")
     .nullable()
-    .label("kupuvanje.valuta_id"),
+    .label("banktransaction.valuta_id"),
 });
 
-function KupuvanjeEditScreen({ route }) {
-  const [artikalData, setArtikalData] = useState([]);
-  const [artikalId, setArtikalId] = useState("");
-  const [kupovnaCena, setKupovnaCena] = useState("");
+function BankTransactionEditScreen({ route }) {
+  const [amount, setAmount] = useState(0);
+  const [bankData, setBankData] = useState([]);
+  const [bankId, setBankId] = useState("");
   const [date, setDate] = useState(new Date());
   const [datePicker, setDatePicker] = useState(false);
   const [defaultCurrency, setDefaultCurrency] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
   const [error, setError] = useState(false);
   const [fullData, setFullData] = useState([]);
-  const [imeArtikal, setImeArtikal] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [imeBank, setImeBank] = useState("");
   const [mode, setMode] = useState("date");
+  const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [selectedArtikal, setSelectedArtikal] = useState("");
+  const [selectedBank, setSelectedBank] = useState("");
+  const [stavenoIsTicked, setStavenoIsTicked] = useState(false);
   const [show, setShow] = useState(false);
-  const [valutaData, setValutaData] = useState([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const { user, logOut } = useAuth();
+  const [valutaData, setValutaData] = useState([]);
+
+  const toggleSwitch = () =>
+    setStavenoIsTicked((previousState) => {
+      if (!isAddMode) {
+        previousState
+          ? (banktransaction.transakcija = 1)
+          : (banktransaction.transakcija = 0);
+      }
+      return !previousState;
+    });
 
   const navigation = useNavigation();
 
   Moment.locale("de");
 
   let isAddMode = true;
-  const kupuvanje = route.params;
-  if (kupuvanje !== undefined) {
-    const { id } = kupuvanje.kupdatum_id;
+  const banktransaction = route.params;
 
-    console.log("1. id = " + id);
-    console.log("kupuvanje = " + JSON.stringify(kupuvanje, null, 2));
+  if (banktransaction !== undefined) {
+    isAddMode = !banktransaction.trans_id;
+    // console.log("isAddMode = " + isAddMode);
 
-    isAddMode = !kupuvanje.kupdatum_id;
+    // console.log(
+    //   "banktransaction = " + JSON.stringify(banktransaction, null, 2)
+    // );
+    // console.log("banktransaction.transakcija = " + banktransaction.transakcija);
+    // console.log("banktransaction.trans_id = " + banktransaction.trans_id);
+    // console.log("banktransaction.valuta_id = " + banktransaction.valuta_id);
 
-    console.log("isAddMode = " + isAddMode);
-    console.log("kupuvanje.kupdatum_id = " + kupuvanje.kupdatum_id);
-    console.log("kupuvanje.valuta_id = " + kupuvanje.valuta_id);
-    console.log("kupuvanje.vraboten_id = " + kupuvanje.vraboten_id);
-    console.log("2. id = " + id);
+    if (!isAddMode) {
+    }
   } else {
-    // setIsEnabled(false);
   }
 
   useEffect(() => {
@@ -101,9 +109,15 @@ function KupuvanjeEditScreen({ route }) {
     let mounted = true;
 
     getAllValutas(mounted);
-    getAllArtikals(mounted);
+    getAllBanks(mounted);
 
     if (route.params) {
+      // if (bank.transakcija.toString()) {
+      //   bank.transakcija ? setStavenoIsTicked(true) : setStavenoIsTicked(false);
+      // }
+      banktransaction.transakcija
+        ? setStavenoIsTicked(true)
+        : setStavenoIsTicked(false);
     }
 
     if (!isAddMode) {
@@ -115,31 +129,29 @@ function KupuvanjeEditScreen({ route }) {
     return () => (mounted = false);
   }, []);
 
-  useEffect(() => {
-    // console.log("artikalData.length = <" + artikalData.length + ">");
-  }, [artikalData]);
+  useEffect(() => {}, [bankData]);
 
   useEffect(() => {
     // console.log("fullData.length = <" + fullData.length + ">");
   }, [fullData]);
 
-  const getAllArtikals = async (mounted) => {
-    // console.log("START getAllArtikals-1");
+  const getAllBanks = async (mounted) => {
+    // console.log("START getAllBanks-1");
 
     setLoading(true);
-    const response = await artikalsApi.getArtikals();
+    const response = await banksApi.getBanks();
     setLoading(false);
 
     setError(!response.ok);
 
     if (mounted) {
-      // console.log("1. setArtikalData");
-      setArtikalData(response.data);
-      // console.log("2. setArtikalData");
+      // console.log("1. setBankData");
+      setBankData(response.data);
+      // console.log("2. setBankData");
       setFullData(response.data);
     }
 
-    // console.log("END getAllArtikals-1");
+    // console.log("END getAllBanks-1");
     return response;
   };
 
@@ -160,33 +172,14 @@ function KupuvanjeEditScreen({ route }) {
     return response;
   };
 
-  const getInsDate = () => {
-    // console.log("START getInsDate");
-
-    if (isAddMode) {
-      // console.log("IME_ARTIKAL = <>");
-
-      return "";
-    } else {
-      // console.log("END getInsDate");
-      // var datumLocale = kupuvanje.insdate;
-      // return(<View> {Moment(dt).format('d MMM YYYY')} </View>) //basically you can do all sorts of the formatting and others
-
-      return Moment(kupuvanje.insdate).format("DD.MM.YYYY");
-    }
-  };
-
-  const getTransId = () => {
-    // console.log("START getTransId");
-
+  const getAmount = () => {
     if (isAddMode) {
       return "";
     } else {
-      // console.log("END getTransId");
-      if (kupuvanje.trans_id) {
-        return kupuvanje.trans_id.toString();
+      if (banktransaction.transakcija === 1) {
+        return banktransaction.staveno.toString();
       } else {
-        return "";
+        return banktransaction.izvadeno.toString();
       }
     }
   };
@@ -198,53 +191,53 @@ function KupuvanjeEditScreen({ route }) {
       if (datePicker) {
         return Moment(date).format("DD.MM.YYYY");
       } else {
-        var datumLocale = kupuvanje.datum;
+        var datumLocale = banktransaction.datum;
         return Moment(datumLocale).format("DD.MM.YYYY");
       }
     }
   };
 
-  const getOpis = () => {
+  const getInsDate = () => {
     if (isAddMode) {
       return "";
     } else {
-      if (kupuvanje.opis) {
-        return kupuvanje.opis.toString();
+      return Moment(banktransaction.insdate).format("DD.MM.YYYY");
+    }
+  };
+
+  const getKomentar = () => {
+    if (isAddMode) {
+      return "";
+    } else {
+      if (banktransaction.komentar) {
+        return banktransaction.komentar.toString();
       } else {
         return "";
       }
     }
   };
 
-  // const deleteExecution = async (kupuvanje2, { resetForm }) => {
-  const deleteExecution = async (kupuvanje2) => {
-    // const deleteExecution = async () => {
-
+  const deleteExecution = async (banktransaction2) => {
     console.log("START deleteExecution");
 
     setProgress(0);
     setUploadVisible(true);
     var result;
 
-    kupuvanje2.artikal_id = kupuvanje.artikal_id;
-    kupuvanje2.kupdatum_id = kupuvanje.kupdatum_id;
+    banktransaction2.bank_id = banktransaction.bank_id;
+    banktransaction2.trans_id = banktransaction.trans_id;
 
-    result = await kupuvanjesApi.deleteKupuvanje(
-      { ...kupuvanje2 },
+    result = await bankTransactionsApi.deleteBankTransaction(
+      { ...banktransaction2 },
       (progress) => setProgress(progress)
     );
 
     if (!result.ok) {
       setUploadVisible(false);
-      return alert("Could not delete the kupuvanje");
+      return alert("Could not delete the banktransaction");
     }
 
     navigation.goBack(null);
-
-    // navigation.navigate(routes.PRIMANJA_LIST);
-    // if (!isAddMode) {
-    //   resetForm();
-    // }
 
     console.log("END deleteExecution");
   };
@@ -252,12 +245,12 @@ function KupuvanjeEditScreen({ route }) {
   const handleDelete = async () => {
     console.log("START handleDelete");
 
-    console.log("kupuvanje.kupdatum_id = " + kupuvanje.kupdatum_id);
-    console.log("kupuvanje.artikal_id = " + kupuvanje.artikal_id);
+    console.log("banktransaction.trans_id = " + banktransaction.trans_id);
+    console.log("banktransaction.bank_id = " + banktransaction.bank_id);
 
     Alert.alert(
       "Brishenje",
-      `Dali sakate da go izbrishete kupuvanjeto ${kupuvanje.ime_artikal}?`,
+      `Dali sakate da ja izbrishete transakcijata ${banktransaction.komentar}?`,
       [
         {
           text: "Ne",
@@ -266,7 +259,7 @@ function KupuvanjeEditScreen({ route }) {
           },
           style: "cancel",
         },
-        { text: "Da", onPress: () => deleteExecution(kupuvanje) },
+        { text: "Da", onPress: () => deleteExecution(banktransaction) },
       ],
       { cancelable: false }
     );
@@ -302,38 +295,53 @@ function KupuvanjeEditScreen({ route }) {
     console.log("END onChangeDatePicker");
   };
 
-  const handleSubmit = async (kupuvanje2, { resetForm }) => {
+  const handleSubmit = async (banktransaction2, { resetForm }) => {
     console.log("START handleSubmit");
 
-    console.log("1. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
+    console.log(
+      "1. banktransaction2 = " + JSON.stringify(banktransaction2, null, 2)
+    );
 
-    kupuvanje2.datum = getDatum();
+    if (stavenoIsTicked) {
+      banktransaction2.transakcija = 1;
+      banktransaction2.staveno = banktransaction2.amount;
+      banktransaction2.izvadeno = 0;
+    } else {
+      banktransaction2.transakcija = 0;
+      banktransaction2.izvadeno = banktransaction2.amount;
+      banktransaction2.staveno = 0;
+    }
+
+    banktransaction2.datum = getDatum();
+    banktransaction2.komentar = banktransaction2.komentar;
 
     setProgress(0);
     setUploadVisible(true);
-    console.log("");
 
     var result;
 
     if (isAddMode) {
-      kupuvanje2.artikal_id = artikalId;
-      kupuvanje2.kupovnacena = kupovnaCena;
-      result = await kupuvanjesApi.addKupuvanje({ ...kupuvanje2 }, (progress) =>
-        setProgress(progress)
+      banktransaction2.bank_id = bankId;
+      banktransaction2.insuser = user.email;
+      result = await bankTransactionsApi.addBankTransaction(
+        { ...banktransaction2 },
+        (progress) => setProgress(progress)
       );
     } else {
-      kupuvanje2.artikal_id = kupuvanje.artikal_id;
-      kupuvanje2.kupovnacena = kupuvanje.kupovnacena;
-      kupuvanje2.insuser = kupuvanje.insuser;
-      result = await kupuvanjesApi.updateKupuvanjes(
-        { ...kupuvanje2 },
+      banktransaction2.trans_id = banktransaction2.trans_id;
+      banktransaction2.bank_id = banktransaction2.bank_id;
+      banktransaction2.insuser = banktransaction2.insuser;
+      banktransaction2.insdate = banktransaction2.insdate;
+      banktransaction2.upduser = user.email;
+      result = await bankTransactionsApi.updateBankTransactions(
+        { ...banktransaction2 },
         (progress) => setProgress(progress)
       );
     }
 
     if (!result.ok) {
       setUploadVisible(false);
-      return alert("Could not save the kupuvanje");
+      return alert("Could not save the banktransaction");
     }
 
     if (isAddMode) {
@@ -343,40 +351,34 @@ function KupuvanjeEditScreen({ route }) {
     console.log("END handleSubmit");
   };
 
+  const handleAmountChange = (event) => {
+    const { value } = event.target;
+
+    setAmount(value);
+  };
+
   const handleSearch = (text) => {
     console.log("START handleSearch");
 
     setDisplayForm(false);
 
     const formattedQuery = text.toLowerCase();
-    // console.log("formattedQuery = <" + formattedQuery + ">");
 
-    const filteredData = fullData.filter((artikal) => {
-      return contains(artikal, formattedQuery);
+    const filteredData = fullData.filter((bank) => {
+      return contains(bank, formattedQuery);
     });
     if (filteredData.length < 21) {
-      // console.log("filteredData = " + JSON.stringify(filteredData, null, 2));
     } else {
-      // console.log("More than 20 Artikals");
     }
 
-    // filteredData.sort();
-    setArtikalData(filteredData);
-    setImeArtikal(text);
-    // setDisplayForm(true);
+    setBankData(filteredData);
+    setImeBank(text);
 
     console.log("END handleSearch");
   };
 
-  const contains = ({ ime_artikal, ime_vid }, query) => {
-    // const { ime_artikal } = artikal;
-    // console.log("ime_artikal = <" + ime_artikal + ">");
-    // console.log("query = <" + query + ">");
-
-    // if (ime_artikal.includes(query)) {
-    if (ime_artikal.toLowerCase().search(query) > -1) {
-      // console.log("ime_artikal.search(query) = " + ime_artikal.search(query));
-
+  const contains = ({ ime_banka, ime_vid }, query) => {
+    if (ime_banka.toLowerCase().search(query) > -1) {
       return true;
     }
 
@@ -388,9 +390,9 @@ function KupuvanjeEditScreen({ route }) {
       <SearchBar
         lightTheme
         onChangeText={(queryText) => handleSearch(queryText)}
-        placeholder="Vnesi Artikal"
+        placeholder="Vnesi Banka"
         round
-        value={imeArtikal}
+        value={imeBank}
       />
     );
   }
@@ -405,42 +407,36 @@ function KupuvanjeEditScreen({ route }) {
 
       {isAddMode && (
         <FlatList
-          data={artikalData}
+          data={bankData}
           initialNumToRender={3}
-          keyExtractor={(item) => item.artikal_id.toString()}
+          keyExtractor={(item) => item.bank_id.toString()}
+          renderItem={({ item }) => (
+            <Card
+              key={item.bank_id}
+              title={item.ime_banka}
+              subTitle={`Smetka: ${item.broj_smetka}\nFr.st.auf.: ${item.freistauf_betrag} EUR`}
+              onPress={() => {
+                setDisplayForm(true);
+                setBankData("");
+                setSelectedBank(`${item.ime_banka} / ${item.broj_smetka}`);
+                setBankId(item.bank_id);
+                console.log("item.bank_id = " + item.bank_id);
+              }}
+            />
+          )}
+          stickyHeaderIndices={[0]}
+          value={imeBank}
           ListHeaderComponent={
             <>
               <SearchBar
                 lightTheme
                 onChangeText={handleSearch}
-                placeholder="Vnesi Artikal"
+                placeholder="Vnesi Banka"
                 round
-                value={imeArtikal}
+                value={imeBank}
               />
             </>
           }
-          renderItem={({ item }) => (
-            <Card
-              key={item.artikal_id}
-              title={item.ime_artikal}
-              subTitle={`Cena: ${item.cena}\nVid: ${item.ime_vid}`}
-              onPress={() => {
-                setDisplayForm(true);
-                setArtikalData("");
-                setSelectedArtikal(
-                  `${item.ime_artikal} / ${item.cena} / ${item.ime_vid}`
-                );
-                // 6;
-                console.log(
-                  `Artikal ID has been selected: ${item.ime_artikal} / ${item.artikal_id} / ${item.cena}`
-                );
-                setArtikalId(item.artikal_id);
-                setKupovnaCena(item.cena);
-              }}
-            />
-          )}
-          stickyHeaderIndices={[0]}
-          value={imeArtikal}
           ListFooterComponent={
             displayForm ? null : <AppTextInput>Nema Banki</AppTextInput>
           }
@@ -450,30 +446,22 @@ function KupuvanjeEditScreen({ route }) {
       {displayForm && (
         <Form
           initialValues={{
-            kupdatum_id: isAddMode ? "" : kupuvanje.kupdatum_id.toString(),
+            trans_id: isAddMode ? "" : banktransaction.trans_id.toString(),
             datum: getDatum(),
-            ime_artikal: isAddMode ? "" : kupuvanje.ime_artikal.toString(),
-            kolicina: isAddMode ? "" : kupuvanje.kolicina.toString(),
-            artikal_id: isAddMode ? "" : kupuvanje.artikal_id.toString(),
-
+            ime_banka: isAddMode ? "" : banktransaction.ime_banka.toString(),
+            amount: getAmount(),
+            bank_id: isAddMode ? "" : banktransaction.bank_id.toString(),
             valuta: {
-              label: isAddMode ? "EUR" : kupuvanje.ime_valuta.toString(),
-              value: isAddMode ? "9" : kupuvanje.valuta_id,
+              label: isAddMode ? "EUR" : banktransaction.ime_valuta.toString(),
+              value: isAddMode ? "9" : banktransaction.valuta_id,
             },
-            valuta_id: isAddMode ? "9" : kupuvanje.valuta_id.toString(),
-
-            vraboten_id: isAddMode ? "1" : kupuvanje.vraboten_id.toString(),
-
-            opis: getOpis(),
-
-            steuerrelevant: isAddMode
+            valuta_id: isAddMode ? "9" : banktransaction.valuta_id.toString(),
+            komentar: getKomentar(),
+            transakcija: isAddMode
               ? "0"
-              : kupuvanje.steuerrelevant.toString(),
-
-            trans_id: isAddMode ? "" : getTransId(),
+              : banktransaction.transakcija.toString(),
             insdate: isAddMode ? "" : getInsDate(),
-            insuser: isAddMode ? "" : kupuvanje.insuser,
-            kupovnaCena: isAddMode ? "" : kupuvanje.kupovnaCena,
+            insuser: isAddMode ? "" : banktransaction.insuser,
           }}
           onSubmit={handleSubmit}
           onDelete={handleDelete}
@@ -483,9 +471,9 @@ function KupuvanjeEditScreen({ route }) {
             <FormField
               editable={false}
               maxLength={50}
-              name="ime_artikal"
-              placeholder="Artikal"
-              value={isAddMode && selectedArtikal}
+              name="ime_banka"
+              placeholder="Banka"
+              value={isAddMode && selectedBank}
               width="100%"
             />
           )}
@@ -493,9 +481,8 @@ function KupuvanjeEditScreen({ route }) {
             <FormField
               editable={false}
               maxLength={50}
-              name="ime_artikal"
-              placeholder="Artikal"
-              // value={selectedArtikal}
+              name="ime_banka"
+              placeholder="Banka"
               width="100%"
             />
           )}
@@ -526,15 +513,16 @@ function KupuvanjeEditScreen({ route }) {
           <FormField
             keyboardType="numeric"
             maxLength={10}
-            name="kolicina"
-            placeholder="Kolicina"
+            name="amount"
+            onChange={handleAmountChange}
+            placeholder="Iznos"
             width="100%"
           />
           <FormField
             maxLength={200}
             multiline={true}
-            name="opis"
-            placeholder="Opis"
+            name="komentar"
+            placeholder="Komentar"
             editable={true}
           />
           <Picker
@@ -545,6 +533,18 @@ function KupuvanjeEditScreen({ route }) {
             placeholder="Valuta"
             width="100%"
           />
+          <Text style={styles.switch}>
+            <Switch
+              style={styles.switch}
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={stavenoIsTicked ? "#f5dd4b" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={stavenoIsTicked}
+            />
+            Primanje
+          </Text>
+
           <FormField
             keyboardType="numeric"
             maxLength={10}
@@ -609,4 +609,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default KupuvanjeEditScreen;
+export default BankTransactionEditScreen;

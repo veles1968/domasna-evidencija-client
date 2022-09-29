@@ -79,8 +79,6 @@ function ArtikalEditScreen({ route }) {
 
     if (route.params) {
       artikal.steuerrelevant ? setIsEnabled(true) : setIsEnabled(false);
-      console.log("setImeArtikal");
-      // setImeArtikal(artikal.ime_artikal);
     }
 
     console.log("END ************ useEffect ************");
@@ -246,7 +244,6 @@ function ArtikalEditScreen({ route }) {
           name="steuerrelevant"
           placeholder="Danok?"
           width={120}
-          // defaultValue={isAddMode ? "" : artikal.steuerrelevant.toString()}
         />
         <FormField
           keyboardType="numeric"

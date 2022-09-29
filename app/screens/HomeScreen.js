@@ -6,7 +6,6 @@ import colors from "../config/colors";
 import Icon from "../components/Icon";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
-// import useAuth from "../auth/useAuth";
 
 const menuItems = [
   {
@@ -32,6 +31,14 @@ const menuItems = [
       backgroundColor: colors.secondary,
     },
     targetScreen: routes.KUPUVANJE_EDIT,
+  },
+  {
+    title: "Transakcija Vnes",
+    icon: {
+      name: "format-list-bulleted",
+      backgroundColor: colors.secondary,
+    },
+    targetScreen: routes.BANKTRANSACTION_EDIT,
   },
   {
     title: "Messages",

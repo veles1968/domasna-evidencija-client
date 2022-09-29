@@ -5,6 +5,7 @@ import useNotifications from "../hooks/useNotifications";
 
 import ArtikalEditScreen from "../screens/ArtikalEditScreen";
 import ArtikalNavigator from "./ArtikalNavigator";
+import BankTransactionsScreen from "../screens/BankTransactionsScreen";
 import HomeNavigator from "./HomeNavigator";
 import KupuvanjesScreen from "../screens/KupuvanjesScreen";
 import navigation from "./rootNavigation";
@@ -37,32 +38,6 @@ const ShowScreen = () => {
 
 const AppNavigator = () => {
   useNotifications();
-
-  // const [showTab, setShowTab] = useState(false);
-  // const { navigation, route } = props;
-  // const { screen, setScreen } = useContext(ScreenContext);
-
-  // console.log("Current Screen:" + navigation.navigate.routeName);
-  // console.log("Current Screen:" + navigation.routeName);
-
-  // const activeRoute = () => {
-  //   console.log(
-  //     "this.props.navigation.state = " + this.props.navigation.state.routeName
-  //   );
-  // };
-
-  // const state = useNavigationState((state) => state);
-  // const routeName = state.routeNames[state.index];
-  // console.log(routeName);
-
-  // const getCurrentRoute = (nav) => {
-  //   if (Array.isArray(nav.routes) && nav.routes.length > 0) {
-  //     return getCurrentRoute(nav.routes[nav.index]);
-  //   } else {
-  //     return nav.routeName;
-  //   }
-  // };
-  // const currentNavigation = getCurrentRoute(navigation.state);
 
   return (
     <Tab.Navigator initialRouteName={HomeNavigator}>
@@ -135,6 +110,16 @@ const AppNavigator = () => {
               color={color}
               size={size}
             />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="BankTransactions"
+        component={BankTransactionsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bank" color={color} size={size} />
           ),
         }}
       />

@@ -28,12 +28,6 @@ import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import NewListingButton from "../navigation/NewListingButton";
 
-// import { NavigationContainer } from "@react-navigation/native";
-// import navigationTheme from "../navigation/navigationTheme";
-// import { navigationRef } from "../navigation/rootNavigation";
-// import AppNavigator from "../navigation/AppNavigator";
-// import KupuvanjeNavigator from "../navigation/KupuvanjeNavigator";
-
 // 08.04.2021
 // import { useRoute } from "@react-navigation/native";
 

@@ -47,11 +47,7 @@ const validationSchema = Yup.object().shape({
     .label("primanja.vraboten_id"),
   tip_primanje: Yup.string().required().min(1).label("Tip na Primanje"),
   datum: Yup.string().required().min(1).label("Datum"),
-  iznos: Yup.number()
-    .required("Iznosot mora da se vnese")
-    .min(1)
-    .max(100000000000)
-    .label("Iznos"),
+  iznos: Yup.string().required("Iznosot mora da se vnese").label("Iznos"),
   valuta: Yup.object()
     .required("Valuta e obavezno da se vnese")
     .nullable()
@@ -454,10 +450,6 @@ function PrimanjaEditScreen({ route }) {
           keyboardType="numeric"
           placeholder="Datum"
           value={getDatum()}
-          // value={selectedDate}
-          // value={date}
-          // value="23.08.2021"
-          // value={Moment(date).format("DD.MM.YYYY")} //DT-20210802: With this, it works
         />
         <FormField
           keyboardType="numeric"

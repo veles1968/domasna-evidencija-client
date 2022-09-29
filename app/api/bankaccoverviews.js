@@ -1,7 +1,6 @@
 import client from "./client";
 
 const endpoint = "/btrsum";
-// const saveendpoint = "/primanjas";
 
 const getBankAccOverviews = () => client.get(endpoint);
 

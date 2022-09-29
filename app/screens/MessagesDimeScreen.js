@@ -102,5 +102,23 @@ function MessagesScreen(props) {
 }
 
 const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({
+//   screen: {
+//     padding: 20,
+//     backgroundColor: colors.light,
+//   },
+//   container: {
+//     flex: 1,
+//     marginTop: StatusBar.currentHeight || 0,
+//   },
+//   item: {
+//     padding: 20,
+//     marginVertical: 8,
+//     marginHorizontal: 16,
+//   },
+//   title: {
+//     fontSize: 32,
+//   },
+// });
 
 export default MessagesScreen;

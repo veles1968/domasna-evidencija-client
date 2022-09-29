@@ -85,18 +85,6 @@ function BankAccOverviewsScreen({ route }) {
 
   const navigation = useNavigation();
 
-  // var NumberFormat = require("react-number-format");
-
-  // const toggleSwitch = () =>
-  // setIsEnabled((previousState) => {
-  //   if (!isAddMode) {
-  //     previousState
-  //       ? (artikal.steuerrelevant = 1)
-  //       : (artikal.steuerrelevant = 0);
-  //   }
-  //   return !previousState;
-  // });
-
   Moment.locale("de");
 
   useEffect(() => {
@@ -106,6 +94,8 @@ function BankAccOverviewsScreen({ route }) {
     getAllBankAccOverviews(mounted);
 
     if (route.params) {
+    } else {
+      setBankAccOverviewData(initialBankAccOverview);
     }
 
     // if (imeBanka) {
@@ -322,6 +312,10 @@ function BankAccOverviewsScreen({ route }) {
             subTitle={`${Number(item.sum_sta_minus_izv).toFixed(2)} ${
               item.ime_valuta
             }`}
+            onPress={() => {
+              navigation.navigate(routes.BANKTRANSACTIONS_LIST, item);
+              // console.log("item.bank_id = " + item.bank_id);
+            }}
           />
         )}
       />

@@ -88,9 +88,7 @@ export const updateKupuvanjes = (kupuvanje, onUploadProgress) => {
 };
 
 export const deleteKupuvanje = (kupuvanje, onUploadProgress) => {
-  // export const deleteKupuvanje = (kupuvanje) => {
   console.log(">>>>>>>>>>>>>>>>> START deleteKupuvanje");
-  // console.log("kupuvanje.kupdatum_id = <" + kupuvanje.kupdatum_id + ">");
 
   var data = {
     kupdatum_id: kupuvanje.kupdatum_id,
@@ -129,15 +127,6 @@ export const deleteKupuvanje = (kupuvanje, onUploadProgress) => {
         onUploadProgress(progress.loaded / progress.total),
     }
   );
-
-  // return client.delete(
-  //   // endpoint + "/" + kupuvanje.kupdatum_id,
-  //   endpoint / JSON.stringify(data),
-  //   {
-  //     onUploadProgress: (progress) =>
-  //       onUploadProgress(progress.loaded / progress.total),
-  //   }
-  // );
 };
 
 export default {
