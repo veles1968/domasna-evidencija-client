@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
 import AppLoading from "expo-app-loading";
+import { useAuth0, Auth0Provider } from "react-native-auth0";
 
 import AppNavigator from "./app/navigation/AppNavigator";
 import AuthContext from "./app/auth/context";
@@ -12,8 +13,44 @@ import navigationTheme from "./app/navigation/navigationTheme";
 import { navigationRef } from "./app/navigation/rootNavigation";
 import OfflineNotice from "./app/components/OfflineNotice";
 
-export default function App() {
-  const [user, setUser] = useState();
+const Home = () => {
+  const { authorize, clearSession, user } = useAuth0();
+
+  const onLogin = async () => {
+    try {
+      await authorize({ scope: "openid profile email" });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onLogout = async () => {
+    try {
+      await clearSession();
+    } catch (e) {
+      console.log("Log out cancelled");
+    }
+  };
+
+  const loggedIn = user !== undefined && user !== null;
+
+  return (
+    <View style={styles.container}>
+      {loggedIn && <Text>You are logged in as {user.name}</Text>}
+      {!loggedIn && <Text>You are not logged in</Text>}
+
+      <Button
+        onPress={loggedIn ? onLogout : onLogin}
+        title={loggedIn ? "Log Out" : "Log In"}
+      />
+    </View>
+  );
+};
+
+// export default function App() {
+const App = () => {
+  const { authorize, clearSession, user } = useAuth0();
+  // const [user, setUser] = useState();
   const [isReady, setIsReady] = useState(false);
 
   const restoreUser = async () => {
@@ -25,24 +62,33 @@ export default function App() {
     if (user) setUser(user);
   };
 
-  if (!isReady)
-    return (
-      <AppLoading
-        startAsync={restoreUser}
-        onFinish={() => setIsReady(true)}
-        onError={() => console.log("Greshka vo AppLoading")}
-      />
-    );
+  const onLogin = async () => {
+    try {
+      await authorize({ scope: "openid profile email" });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onLogout = async () => {
+    try {
+      await clearSession();
+    } catch (e) {
+      console.log("Log out cancelled");
+    }
+  };
+
+  const loggedIn = user !== undefined && user !== null;
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <OfflineNotice />
-      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-        {user ? <AppNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <Auth0Provider
+      domain={"dev-87jky4c1.eu.auth0.com"}
+      clientId={"JYHNAusX38MAW8bnpvAlcoQ7U7EWPEAJ"}
+    >
+      <Home />
+    </Auth0Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
