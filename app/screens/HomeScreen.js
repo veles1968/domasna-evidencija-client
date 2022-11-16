@@ -17,14 +17,6 @@ const menuItems = [
     targetScreen: routes.BANKACCOVERVIEWS_LIST,
   },
   {
-    title: "Kupuvanje",
-    icon: {
-      name: "format-list-bulleted",
-      backgroundColor: colors.secondary,
-    },
-    targetScreen: routes.KUPUVANJE_LIST,
-  },
-  {
     title: "Kupuvanje Vnes",
     icon: {
       name: "format-list-bulleted",
@@ -32,6 +24,15 @@ const menuItems = [
     },
     targetScreen: routes.KUPUVANJE_EDIT,
   },
+  {
+    title: "Potroshuvachka",
+    icon: {
+      name: "format-list-bulleted",
+      backgroundColor: colors.secondary,
+    },
+    targetScreen: routes.KUPUVANJE_LIST,
+  },
+
   {
     title: "Transakcija Vnes",
     icon: {

@@ -1,11 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useCallback, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View } from "react-native";
-
 import AppLoading from "expo-app-loading";
-// import Entypo from "@expo/vector-icons/Entypo";
-// import * as SplashScreen from "expo-splash-screen";
 
 import AppNavigator from "./app/navigation/AppNavigator";
 import AuthContext from "./app/auth/context";
