@@ -408,6 +408,9 @@ function KupuvanjeEditScreen({ route }) {
           data={artikalData}
           initialNumToRender={3}
           keyExtractor={(item) => item.artikal_id.toString()}
+          // keyExtractor={(item) => item.artikal_id.toString()}
+          // keyExtractor={(_, i) => i.toString()}
+          // keyExtractor={(item) => item.artikal_id}
           ListHeaderComponent={
             <>
               <SearchBar

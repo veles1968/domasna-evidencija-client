@@ -11,8 +11,8 @@ import {
 const initialMessages = [
   {
     id: 1,
-    title: "Prvo Ime",
-    description: "Hey! Is this item still available?",
+    title: "Version",
+    description: "16.11.2022 1938",
     image: require("../assets/dime.jpg"),
   },
   {
