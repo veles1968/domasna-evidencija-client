@@ -36,6 +36,7 @@ import routes from "../navigation/routes";
 import Screen from "../components/Screen";
 import AppTextInput from "../components/TextInput";
 import UploadScreen from "./UploadScreen";
+import useAuthDomasnaEvidencija from "../auth/useAuth";
 import valutasApi from "../api/valutas";
 
 const validationSchema = Yup.object().shape({
@@ -67,7 +68,7 @@ function BankTransactionEditScreen({ route }) {
   const [stavenoIsTicked, setStavenoIsTicked] = useState(false);
   const [show, setShow] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const { user, logOut } = useAuth();
+  const { userDomasnaEvidencija } = useAuthDomasnaEvidencija();
   const [valutaData, setValutaData] = useState([]);
 
   const toggleSwitch = () =>
@@ -298,10 +299,6 @@ function BankTransactionEditScreen({ route }) {
   const handleSubmit = async (banktransaction2, { resetForm }) => {
     console.log("START handleSubmit");
 
-    console.log(
-      "1. banktransaction2 = " + JSON.stringify(banktransaction2, null, 2)
-    );
-
     if (stavenoIsTicked) {
       banktransaction2.transakcija = 1;
       banktransaction2.staveno = banktransaction2.amount;
@@ -322,7 +319,7 @@ function BankTransactionEditScreen({ route }) {
 
     if (isAddMode) {
       banktransaction2.bank_id = bankId;
-      banktransaction2.insuser = user.email;
+      banktransaction2.insuser = userDomasnaEvidencija;
       result = await bankTransactionsApi.addBankTransaction(
         { ...banktransaction2 },
         (progress) => setProgress(progress)
@@ -330,9 +327,7 @@ function BankTransactionEditScreen({ route }) {
     } else {
       banktransaction2.trans_id = banktransaction2.trans_id;
       banktransaction2.bank_id = banktransaction2.bank_id;
-      banktransaction2.insuser = banktransaction2.insuser;
-      banktransaction2.insdate = banktransaction2.insdate;
-      banktransaction2.upduser = user.email;
+      banktransaction2.upduser = userDomasnaEvidencija;
       result = await bankTransactionsApi.updateBankTransactions(
         { ...banktransaction2 },
         (progress) => setProgress(progress)

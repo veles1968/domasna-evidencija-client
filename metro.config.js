@@ -1,4 +1,10 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const { getDefaultConfig } = require('expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
 
-module.exports = getDefaultConfig(__dirname);
+const defaultConfig = getDefaultConfig(__dirname);
+defaultConfig.resolver.assetExts.push("db");
+module.exports = defaultConfig;
+
+// 19.11.2022: Migrating from "expo build" to "EAS Build"
+// Outcommented:
+// module.exports = getDefaultConfig(__dirname);

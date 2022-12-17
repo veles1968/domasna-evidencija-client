@@ -39,6 +39,7 @@ import Screen from "../components/Screen";
 import Text from "../components/TextInput";
 import TextInput from "../components/TextInput";
 import UploadScreen from "./UploadScreen";
+import useAuthDomasnaEvidencija from "../auth/useAuth";
 import valutasApi from "../api/valutas";
 import vidsApi from "../api/vids";
 
@@ -71,6 +72,7 @@ function KupuvanjeEditScreen({ route }) {
   const [show, setShow] = useState(false);
   const [valutaData, setValutaData] = useState([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const { userDomasnaEvidencija } = useAuthDomasnaEvidencija();
 
   const navigation = useNavigation();
 
@@ -305,8 +307,6 @@ function KupuvanjeEditScreen({ route }) {
   const handleSubmit = async (kupuvanje2, { resetForm }) => {
     console.log("START handleSubmit");
 
-    console.log("1. kupuvanje2 = " + JSON.stringify(kupuvanje2, null, 2));
-
     kupuvanje2.datum = getDatum();
 
     setProgress(0);
@@ -318,6 +318,7 @@ function KupuvanjeEditScreen({ route }) {
     if (isAddMode) {
       kupuvanje2.artikal_id = artikalId;
       kupuvanje2.kupovnacena = kupovnaCena;
+      kupuvanje2.insuser = userDomasnaEvidencija;
       result = await kupuvanjesApi.addKupuvanje({ ...kupuvanje2 }, (progress) =>
         setProgress(progress)
       );

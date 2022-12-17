@@ -12,49 +12,7 @@ const initialMessages = [
   {
     id: 1,
     title: "Version",
-    description: "16.11.2022 1938",
-    image: require("../assets/dime.jpg"),
-  },
-  {
-    id: 2,
-    title: "Mosh Hamedani",
-    description:
-      "I'm interested in this item. When will you be able to post it?",
-    image: require("../assets/dime.jpg"),
-  },
-  {
-    id: 3,
-    title: "Mosh Hamedani",
-    description:
-      "I'm interested in this item. When will you be able to post it?",
-    image: require("../assets/dime.jpg"),
-  },
-  {
-    id: 4,
-    title: "Mosh Hamedani",
-    description:
-      "I'm interested in this item. When will you be able to post it?",
-    image: require("../assets/dime.jpg"),
-  },
-  {
-    id: 5,
-    title: "Mosh Hamedani",
-    description:
-      "I'm interested in this item. When will you be able to post it?",
-    image: require("../assets/dime.jpg"),
-  },
-  {
-    id: 6,
-    title: "Shesto Ime",
-    description:
-      "I'm interested in this item. When will you be able to post it?",
-    image: require("../assets/dime.jpg"),
-  },
-  {
-    id: 7,
-    title: "Posleden",
-    description:
-      "I'm interested in this item. When will you be able to post it?",
+    description: "Update - 17.12.2022 2050",
     image: require("../assets/dime.jpg"),
   },
 ];

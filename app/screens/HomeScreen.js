@@ -1,11 +1,13 @@
 import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
+import { useAuth0 } from "react-native-auth0";
 
 import { ListItem, ListItemSeparator } from "../components/lists";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
 import routes from "../navigation/routes";
 import Screen from "../components/Screen";
+import useAuthDomasnaEvidencija from "../auth/useAuth";
 
 const menuItems = [
   {
@@ -41,6 +43,7 @@ const menuItems = [
     },
     targetScreen: routes.BANKTRANSACTION_EDIT,
   },
+
   {
     title: "Messages",
     icon: {
@@ -52,7 +55,7 @@ const menuItems = [
 ];
 
 function getImage(email) {
-  if (email === "dime@dime.de") {
+  if (email === "dimce.tumbov@gmail.com") {
     return require("../assets/dime.jpg");
   } else if (email === "bile@bile.de") {
     return require("../assets/bile.jpg");
@@ -60,14 +63,15 @@ function getImage(email) {
 }
 
 function HomeScreen({ navigation }) {
-  const { user, logOut } = useAuth();
+  const { userDomasnaEvidencija, logOut } = useAuthDomasnaEvidencija();
+  const { user } = useAuth0();
 
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <ListItem
           title={user.name}
-          subTitle={user.email}
+          subTitle={userDomasnaEvidencija}
           image={getImage(user.email)}
           onPress={console.log("Profile image tapped")}
         />
@@ -94,7 +98,9 @@ function HomeScreen({ navigation }) {
       <ListItem
         title="Log Out"
         IconComponent={<Icon name="logout" backgroundColor="#ffe66d" />}
-        onPress={() => logOut()}
+        onPress={logOut}
+        // onPress={() => logOut()}
+        // onPress={onLogout}
       />
     </Screen>
   );

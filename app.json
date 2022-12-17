@@ -15,29 +15,39 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/0469770d-185f-41d8-8cd2-248a4637060b"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.veles1968.domaevid",
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "sdkVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+
+      "package": "com.veles1968.domaevid",
+      "runtimeVersion": "exposdk:47.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "Domasna Evidencija, 15.11.2022 001",
+    "description": "Domasna Evidencija, 23.11.2022 003",
     "extra": {
       "eas": {
         "projectId": "0469770d-185f-41d8-8cd2-248a4637060b"
       }
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    }
+    "plugins": [
+      [
+        "react-native-auth0",
+        {
+          "domain": "dev-87jky4c1.eu.auth0.com"
+        }
+      ]
+    ]
   }
 }
