@@ -10,9 +10,33 @@ import {
 
 const initialMessages = [
   {
+    id: 4,
+    title: "Version",
+    description: "Update - 25.02.2023 1552, ORACLE Instance started, new Token",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 3,
+    title: "Version",
+    description: "Update - 24.02.2023 0824, new Token",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 3,
+    title: "Version",
+    description: "Update - 30.01.2023 1932, new Token",
+    image: require("../assets/dime.jpg"),
+  },
+  {
+    id: 2,
+    title: "Version",
+    description: "Update - 25.01.2023 1834, ORACLE Client, mTLS",
+    image: require("../assets/dime.jpg"),
+  },
+  {
     id: 1,
     title: "Version",
-    description: "Update - 17.12.2022 2050",
+    description: "Update - 31.12.2022 1026, new Token",
     image: require("../assets/dime.jpg"),
   },
 ];
